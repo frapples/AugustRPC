@@ -1,4 +1,4 @@
-package io.github.frapples.augustrpc.context.common;
+package io.github.frapples.augustrpc.context;
 
 /**
  * @author Frapples <isfrapples@outlook.com>
