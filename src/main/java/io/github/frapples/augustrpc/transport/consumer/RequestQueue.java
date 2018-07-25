@@ -34,20 +34,20 @@ public class RequestQueue<T, R> {
     }
 
 
-    private BlockingDeque<QueueItem> queue;
+    private BlockingDeque<QueueItem<T, R>> queue;
 
     public RequestQueue(int maxSize) {
         queue = new LinkedBlockingDeque<>(maxSize);
     }
 
-    QueueItem<T, R> poll() {
-        return queue.poll();
+    QueueItem<T, R> poll() throws InterruptedException {
+        return queue.take();
     }
 
     R add(T data) throws InterruptedException {
         QueueItem<T, R> item = new QueueItem<>(data);
         synchronized (item) {
-            queue.add(item);
+            queue.put(item);
             item.wait();
             return item.result;
         }

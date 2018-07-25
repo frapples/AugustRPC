@@ -1,5 +1,8 @@
 package io.github.frapples.augustrpc.context.consumer;
 
+import io.github.frapples.augustrpc.context.RpcContext;
+import io.github.frapples.augustrpc.transport.consumer.ConsumerTransportContext;
+import io.github.frapples.augustrpc.transport.consumer.Request;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import org.slf4j.Logger;
@@ -22,6 +25,10 @@ public class RpcServiceDynamicProxyHandler<T> implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         log.warn("Invoked, class: {}, method: {}, args: {}", this.clazz.getName(), method.getName(), args);
-        return null;
+        // TODO
+        Request request = new Request();
+        ConsumerTransportContext consumerTransportContext = RpcContext.getInstance()
+            .getConsumerTransportContext();
+        return consumerTransportContext.sendCallMessage(request);
     }
 }

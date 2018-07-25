@@ -20,8 +20,13 @@ public class RequestHandlerThread extends Thread {
     @Override
     public void run() {
         while (!stop) {
-            QueueItem<Request, Response> item = requestQueue.poll();
-            this.handleRequest(item.getData(), item::complete);
+            QueueItem<Request, Response> item = null;
+            try {
+                item = requestQueue.poll();
+                this.handleRequest(item.getData(), item::complete);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -31,5 +36,6 @@ public class RequestHandlerThread extends Thread {
 
     private void handleRequest(Object request, Consumer<Response> onComplete) {
         System.out.println("request");
+        onComplete.accept(null);
     }
 }
