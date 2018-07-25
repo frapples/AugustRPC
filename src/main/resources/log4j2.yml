@@ -1,2 +1,18 @@
-Configuration:
-  status: debug
+Appenders:
+  Console:  # Output to console
+    name: CONSOLE
+    target: SYSTEM_OUT
+    PatternLayout:
+      pattern: "%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p %t (%F:%L) - %m%n"
+
+Loggers:
+  Root:
+    level: debug
+    AppenderRef:
+      - ref: CONSOLE
+  Logger: # Set the output level of some packages individually
+    - name: io.github.frapples.augustrpc.simple
+      additivity: false
+      level: debug
+      AppenderRef:
+        - ref: CONSOLE
