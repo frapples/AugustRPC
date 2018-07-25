@@ -1,6 +1,8 @@
-package io.github.frapples.augustrpc.context;
+package io.github.frapples.augustrpc.context.common;
 
+import io.github.frapples.augustrpc.context.cosumer.ConsumerRpcContext;
 import io.github.frapples.augustrpc.context.exception.InitFailException;
+import io.github.frapples.augustrpc.context.provider.ProviderRpcContext;
 import io.github.frapples.augustrpc.iocbridge.IocBridge;
 import io.github.frapples.augustrpc.utils.StringUtils;
 
@@ -29,6 +31,7 @@ public class RpcInitalizer {
     }
 
     private void initConsumer() {
+        Environment.consumerRpcContext = new ConsumerRpcContext();
     }
 
     private IocBridge loadIocBridge() throws InitFailException {

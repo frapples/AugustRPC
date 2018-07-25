@@ -1,4 +1,4 @@
-package io.github.frapples.augustrpc.context;
+package io.github.frapples.augustrpc.context.provider;
 
 import io.github.frapples.augustrpc.context.annotation.AugustRpcProvider;
 import io.github.frapples.augustrpc.context.annotation.AugustRpcService;
