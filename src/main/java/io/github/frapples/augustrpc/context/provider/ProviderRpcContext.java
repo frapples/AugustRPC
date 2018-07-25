@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 @ThreadSafe
 public class ProviderRpcContext {
 
-    private final Logger log = LoggerFactory.getLogger(ProviderRpcContext.class);
+    private final static Logger log = LoggerFactory.getLogger(ProviderRpcContext.class);
 
     private final ConcurrentHashMap<Class<?>, Object> services = new ConcurrentHashMap<>();
     private final IocBridge iocBridge;

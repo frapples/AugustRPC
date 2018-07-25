@@ -14,12 +14,13 @@ public class RpcInitalizer {
 
     private final Config config;
 
-    private RpcInitalizer(Config config) {
+    public RpcInitalizer(Config config) {
         this.config = config;
     }
 
     public void init() throws InitFailException {
         initProvider();
+        initConsumer();
     }
 
     private void initProvider() throws InitFailException {
