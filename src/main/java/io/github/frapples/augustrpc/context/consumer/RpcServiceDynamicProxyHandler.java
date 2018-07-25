@@ -21,7 +21,7 @@ public class RpcServiceDynamicProxyHandler<T> implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        log.warn("Invoked, class: method: args:", this.clazz.getName(), method.getName(), args);
+        log.warn("Invoked, class: {}, method: {}, args: {}", this.clazz.getName(), method.getName(), args);
         return null;
     }
 }
