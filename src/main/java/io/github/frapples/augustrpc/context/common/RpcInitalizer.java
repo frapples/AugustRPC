@@ -3,8 +3,9 @@ package io.github.frapples.augustrpc.context.common;
 import io.github.frapples.augustrpc.context.consumer.ConsumerRpcContext;
 import io.github.frapples.augustrpc.context.exception.InitFailException;
 import io.github.frapples.augustrpc.context.provider.ProviderRpcContext;
+import io.github.frapples.augustrpc.iocbridge.CreatedFailException;
 import io.github.frapples.augustrpc.iocbridge.IocBridge;
-import io.github.frapples.augustrpc.utils.StringUtils;
+import io.github.frapples.augustrpc.iocbridge.IocBridgeFactory;
 
 /**
  * @author Frapples <isfrapples@outlook.com>
@@ -27,39 +28,22 @@ public class RpcInitalizer {
         if (Environment.providerRpcContext != null) {
             return;
         }
-        IocBridge iocBridge = loadIocBridge();
+
+        IocBridge iocBridge;
+        try {
+            iocBridge = IocBridgeFactory.createFromClass(this.config.getIocBridgeImplClassName());
+        } catch (CreatedFailException e) {
+            throw new InitFailException(e.getMessage());
+        }
+
         Environment.providerRpcContext = new ProviderRpcContext(iocBridge);
     }
 
     private void initConsumer() {
+        if (Environment.consumerRpcContext != null) {
+            return;
+        }
+
         Environment.consumerRpcContext = new ConsumerRpcContext();
     }
-
-    private IocBridge loadIocBridge() throws InitFailException {
-        String className = this.config.getIocBridgeImplClassName();
-        if (StringUtils.isEmpty(className)) {
-            throw new InitFailException("IocBridge impl class name is empty");
-        }
-
-        Class<?> clazz;
-        try {
-            clazz = Class.forName(this.config.getIocBridgeImplClassName());
-        } catch (ClassNotFoundException e) {
-            throw new InitFailException("IocBridge impl class not found: " + className);
-        }
-
-        if (!IocBridge.class.isAssignableFrom(clazz)) {
-            throw new InitFailException(String.format("IocBridge impl class %s is not IocBridge", className));
-        }
-
-        IocBridge iocBridge;
-        try {
-            iocBridge = (IocBridge) clazz.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new InitFailException(
-                String.format("Create instance of IocBridge impl class %s fail, reason: %s", className, e));
-        }
-        return iocBridge;
-    }
-
 }
