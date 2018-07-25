@@ -2,6 +2,7 @@ package io.github.frapples.augustrpc.context.common;
 
 import io.github.frapples.augustrpc.context.consumer.ConsumerRpcContext;
 import io.github.frapples.augustrpc.context.provider.ProviderRpcContext;
+import io.github.frapples.augustrpc.transport.consumer.ConsumerTransportContext;
 
 /**
  * @author Frapples <isfrapples@outlook.com>
@@ -11,6 +12,13 @@ public class Environment {
 
     static ProviderRpcContext providerRpcContext;
     static ConsumerRpcContext consumerRpcContext;
+
+    static ConsumerTransportContext consumerTransportContext;
+
+    public static ConsumerTransportContext getConsumerTransportContext() {
+        return consumerTransportContext;
+    }
+
 
     public static ProviderRpcContext getProviderRpcContext() {
         return providerRpcContext;

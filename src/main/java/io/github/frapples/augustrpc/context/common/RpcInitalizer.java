@@ -6,6 +6,7 @@ import io.github.frapples.augustrpc.context.provider.ProviderRpcContext;
 import io.github.frapples.augustrpc.iocbridge.CreatedFailException;
 import io.github.frapples.augustrpc.iocbridge.IocBridge;
 import io.github.frapples.augustrpc.iocbridge.IocBridgeFactory;
+import io.github.frapples.augustrpc.transport.consumer.ConsumerTransportContext;
 
 /**
  * @author Frapples <isfrapples@outlook.com>
@@ -37,6 +38,7 @@ public class RpcInitalizer {
         }
 
         Environment.providerRpcContext = new ProviderRpcContext(iocBridge);
+        Environment.consumerTransportContext = new ConsumerTransportContext();
     }
 
     private void initConsumer() {
