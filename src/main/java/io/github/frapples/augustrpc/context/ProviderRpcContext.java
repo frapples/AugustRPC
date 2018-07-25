@@ -1,11 +1,15 @@
 package io.github.frapples.augustrpc.context;
 
+import io.github.frapples.augustrpc.context.annotation.AugustRpcProvider;
+import io.github.frapples.augustrpc.context.annotation.AugustRpcService;
 import io.github.frapples.augustrpc.context.exception.RpcServiceTypeErrorException;
 import io.github.frapples.augustrpc.iocbridge.IocBridge;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import net.jcip.annotations.ThreadSafe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Frapples <isfrapples@outlook.com>
@@ -13,6 +17,8 @@ import net.jcip.annotations.ThreadSafe;
  */
 @ThreadSafe
 public class ProviderRpcContext {
+
+    private final Logger log = LoggerFactory.getLogger(ProviderRpcContext.class);
 
     private final ConcurrentHashMap<Class<?>, Object> services = new ConcurrentHashMap<>();
     private final IocBridge iocBridge;
@@ -43,20 +49,42 @@ public class ProviderRpcContext {
         this.services.put(clazz, service);
     }
 
+    /**
+     * @param clazz An interface that is annotated by AugustRpcService
+     * @return Return a implementing object of the given interface, and the object is annotated by AugustRpcProvider
+     */
     public <T> T getService(Class<T> clazz) {
-        Object service = services.get(clazz);
-
-        if (service == null) {
-            service = iocBridge.getBean(clazz);
-            this.putService(clazz, service);
+        if (clazz.getAnnotation(AugustRpcService.class) == null) {
+            log.warn("AugustRpc service should be annotated by AugustRpcService, interface: {}", clazz.getName());
+            return null;
         }
 
-        if (clazz.isAssignableFrom(service.getClass())) {
-            return (T) service;
-        } else {
+        Object service;
+        synchronized (this) {
+            service = services.get(clazz);
+            if (service == null) {
+                service = iocBridge.getBean(clazz);
+                this.putService(clazz, service);
+            }
+        }
+
+        if (service == null) {
+            return null;
+        }
+
+        AugustRpcProvider annotation = service.getClass().getAnnotation(AugustRpcProvider.class);
+        if (annotation == null) {
+            log.warn("Implementation of AugustRpc service should be annotated by AugustRpcProvider, class: {}",
+                service.getClass().getName());
+            return null;
+        }
+
+        if (!clazz.isAssignableFrom(service.getClass())) {
             throw new RpcServiceTypeErrorException(
                 String.format("Required: %s, Actual: %s", clazz.getName(), service.getClass().getName()));
         }
+
+        return (T) service;
     }
 
 }
