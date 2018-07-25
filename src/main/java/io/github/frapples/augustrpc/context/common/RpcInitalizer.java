@@ -1,6 +1,6 @@
 package io.github.frapples.augustrpc.context.common;
 
-import io.github.frapples.augustrpc.context.cosumer.ConsumerRpcContext;
+import io.github.frapples.augustrpc.context.consumer.ConsumerRpcContext;
 import io.github.frapples.augustrpc.context.exception.InitFailException;
 import io.github.frapples.augustrpc.context.provider.ProviderRpcContext;
 import io.github.frapples.augustrpc.iocbridge.IocBridge;

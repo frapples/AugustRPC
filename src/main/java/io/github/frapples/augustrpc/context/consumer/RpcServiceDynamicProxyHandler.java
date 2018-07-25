@@ -1,4 +1,4 @@
-package io.github.frapples.augustrpc.context.cosumer;
+package io.github.frapples.augustrpc.context.consumer;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

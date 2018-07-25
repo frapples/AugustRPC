@@ -1,4 +1,4 @@
-package io.github.frapples.augustrpc.context.cosumer;
+package io.github.frapples.augustrpc.context.consumer;
 
 import io.github.frapples.augustrpc.context.annotation.AugustRpcService;
 import java.lang.reflect.Proxy;
