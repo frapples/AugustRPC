@@ -6,6 +6,9 @@ package io.github.frapples.augustrpc.exception;
  */
 public class AugustRpcException extends Exception {
 
+    public AugustRpcException() {
+    }
+
     public AugustRpcException(String msg) {
         super(msg);
     }

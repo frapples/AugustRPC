@@ -9,5 +9,5 @@ import java.util.function.BiConsumer;
  */
 public interface RequestSender {
 
-    void send(ProviderIdentifier providerIdentifier, byte[] data, BiConsumer<Byte[], Throwable> onComplete);
+    void send(ProviderIdentifier providerIdentifier, byte[] data, BiConsumer<byte[], Throwable> onComplete);
 }

@@ -1,5 +1,6 @@
 package io.github.frapples.augustrpc.transport.consumer.model;
 
+import io.github.frapples.augustrpc.transport.consumer.exception.RequestFailException;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import net.jcip.annotations.ThreadSafe;
@@ -26,6 +27,10 @@ public class RequestQueue<T, R> {
             return data;
         }
 
+        public Throwable getException() {
+            return exception;
+        }
+
         public void complete(R result, Throwable exception) {
             synchronized (this) {
                 this.result = result;
@@ -46,11 +51,23 @@ public class RequestQueue<T, R> {
         return queue.take();
     }
 
-    public R add(T data) throws InterruptedException {
+    public R add(T data) throws RequestFailException {
         QueueItem<T, R> item = new QueueItem<>(data);
         synchronized (item) {
-            queue.put(item);
-            item.wait();
+            try {
+                queue.put(item);
+                item.wait();
+            } catch (InterruptedException ie) {
+                RequestFailException e = new RequestFailException();
+                e.addSuppressed(ie);
+                throw e;
+            }
+
+            if (item.getException() != null) {
+                RequestFailException e = new RequestFailException();
+                e.addSuppressed(item.getException());
+                throw e;
+            }
             return item.result;
         }
     }

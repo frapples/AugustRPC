@@ -56,6 +56,7 @@ public class RequestHandlerThread extends Thread {
         if (providerIdentifier == null) {
             onComplete.accept(null, new NoSuitableProviderException(
                 String.format("Service class: %s", request.getServiceFullyQualifiedName())));
+            return;
         }
 
         byte[] data = protocolInterface.packRequest(request);

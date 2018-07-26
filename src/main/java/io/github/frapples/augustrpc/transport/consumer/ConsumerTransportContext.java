@@ -4,6 +4,7 @@ import io.github.frapples.augustrpc.context.exception.InitFailException;
 import io.github.frapples.augustrpc.iocbridge.CreatedFailException;
 import io.github.frapples.augustrpc.protocol.ProtocolInterface;
 import io.github.frapples.augustrpc.registry.RegistryManager;
+import io.github.frapples.augustrpc.transport.consumer.exception.RequestFailException;
 import io.github.frapples.augustrpc.transport.consumer.model.Request;
 import io.github.frapples.augustrpc.transport.consumer.model.RequestQueue;
 import io.github.frapples.augustrpc.transport.consumer.model.Response;
@@ -38,7 +39,7 @@ public class ConsumerTransportContext {
         this.requestHandlerThread.start();
     }
 
-    public Response sendCallMessage(Request request) throws InterruptedException {
+    public Response sendCallMessage(Request request) throws RequestFailException {
         return this.requestQueue.add(request);
     }
 
