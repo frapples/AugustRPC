@@ -6,6 +6,8 @@ import io.github.frapples.augustrpc.context.provider.ProviderRpcContext;
 import io.github.frapples.augustrpc.iocbridge.CreatedFailException;
 import io.github.frapples.augustrpc.iocbridge.IocBridge;
 import io.github.frapples.augustrpc.iocbridge.IocBridgeFactory;
+import io.github.frapples.augustrpc.protocol.JsonProtocol;
+import io.github.frapples.augustrpc.protocol.ProtocolInterface;
 import io.github.frapples.augustrpc.registry.RegistryManager;
 import io.github.frapples.augustrpc.transport.consumer.ConsumerTransportContext;
 import net.jcip.annotations.ThreadSafe;
@@ -23,6 +25,7 @@ public class RpcContext {
     private volatile ConsumerRpcContext consumerRpcContext;
 
     private volatile ConsumerTransportContext consumerTransportContext;
+    private volatile ProtocolInterface protocolInterface;
 
     private volatile RegistryManager registryManager;
 
@@ -41,6 +44,7 @@ public class RpcContext {
     private RpcContext(Config config) throws InitFailException {
         this.config = config;
         this.registryManager = new RegistryManager();
+        this.protocolInterface = new JsonProtocol();
         initProvider();
         initConsumer();
     }
@@ -59,7 +63,10 @@ public class RpcContext {
         }
 
         this.providerRpcContext = new ProviderRpcContext(iocBridge);
-        this.consumerTransportContext = new ConsumerTransportContext(config.getRequestSenderImplClassName(), this.registryManager);
+        this.consumerTransportContext = new ConsumerTransportContext(
+            config.getRequestSenderImplClassName(),
+            this.registryManager,
+            this.protocolInterface);
         this.consumerTransportContext.init();
     }
 
@@ -82,10 +89,6 @@ public class RpcContext {
 
     public ConsumerRpcContext getConsumerRpcContext() {
         return consumerRpcContext;
-    }
-
-    public RegistryManager getRegistryManager() {
-        return registryManager;
     }
 
 }

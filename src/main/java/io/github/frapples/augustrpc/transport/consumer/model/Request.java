@@ -16,6 +16,11 @@ public class Request {
     private final Object[] arguments;
 
     public Request(String serviceFullyQualifiedName, String methodName, String[] methodArgumentTypeFullyQualifiedNames, Object[] arguments) {
+        if (serviceFullyQualifiedName == null || methodName == null ||
+            getMethodArgumentTypeFullyQualifiedNames() == null || arguments == null) {
+            throw new IllegalArgumentException();
+        }
+
         this.serviceFullyQualifiedName = serviceFullyQualifiedName;
         this.methodName = methodName;
         this.methodArgumentTypeFullyQualifiedNames = methodArgumentTypeFullyQualifiedNames;

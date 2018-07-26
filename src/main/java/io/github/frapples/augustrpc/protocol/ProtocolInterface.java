@@ -1,5 +1,9 @@
 package io.github.frapples.augustrpc.protocol;
 
+import io.github.frapples.augustrpc.protocol.exception.SerializeParseException;
+import io.github.frapples.augustrpc.transport.consumer.model.Request;
+import io.github.frapples.augustrpc.transport.consumer.model.Response;
+
 /**
  * @author Frapples <isfrapples@outlook.com>
  * @date 2018/7/25
@@ -8,6 +12,13 @@ public interface ProtocolInterface {
 
     byte[] serialize(Object object);
 
-    Object deserialize(byte[] bytes);
+    Object deserialize(byte[] bytes) throws SerializeParseException;
 
+    byte[] packRequest(Request request);
+
+    Request unpackRequest(byte[] bytes) throws SerializeParseException;
+
+    byte[] packResponse(Response response);
+
+    Response unpackResponse(byte[] bytes);
 }

@@ -1,5 +1,6 @@
 package io.github.frapples.augustrpc.transport.consumer;
 
+import io.github.frapples.augustrpc.protocol.ProtocolInterface;
 import io.github.frapples.augustrpc.registry.RegistryManager;
 import io.github.frapples.augustrpc.transport.consumer.exception.NoSuitableProviderException;
 import io.github.frapples.augustrpc.transport.consumer.model.ProviderIdentifier;
@@ -8,6 +9,7 @@ import io.github.frapples.augustrpc.transport.consumer.model.RequestQueue.QueueI
 import io.github.frapples.augustrpc.transport.consumer.model.Request;
 import io.github.frapples.augustrpc.transport.consumer.model.Response;
 import io.github.frapples.augustrpc.transport.consumer.sender.RequestSender;
+import java.nio.charset.StandardCharsets;
 import java.util.function.BiConsumer;
 
 /**
@@ -16,15 +18,20 @@ import java.util.function.BiConsumer;
  */
 public class RequestHandlerThread extends Thread {
 
-    private final RequestQueue<Request, Response> requestQueue;
     private final RequestSender requestSender;
     private final RegistryManager registryManager;
+    private final ProtocolInterface protocolInterface;
+
+    private final RequestQueue<Request, Response> requestQueue;
     private volatile boolean stop = false;
 
-    RequestHandlerThread(RequestQueue<Request, Response> requestQueue, RequestSender requestSender, RegistryManager registryManager) {
+
+    RequestHandlerThread(RequestQueue<Request, Response> requestQueue, RequestSender requestSender, RegistryManager registryManager,
+        ProtocolInterface protocolInterface) {
         this.requestQueue = requestQueue;
         this.requestSender = requestSender;
         this.registryManager = registryManager;
+        this.protocolInterface = protocolInterface;
     }
 
     @Override
@@ -51,8 +58,8 @@ public class RequestHandlerThread extends Thread {
                 String.format("Service class: %s", request.getServiceFullyQualifiedName())));
         }
 
-        // TODO
-        byte[] data = new byte[0];
+        byte[] data = protocolInterface.packRequest(request);
+        System.out.println(new String(data, StandardCharsets.UTF_8));
         this.requestSender.send(providerIdentifier, data, (result, e) -> {
             onComplete.accept(null, e);
         });
