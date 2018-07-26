@@ -12,6 +12,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
@@ -58,7 +60,7 @@ public class SimpleNetworkListenerImpl implements NetworkListener {
         try {
             in = socket.getInputStream();
             int count;
-            count = in.read(buffer,0, Integer.BYTES);
+            count = in.read(buffer, 0, Integer.BYTES);
             if (count != Integer.BYTES) {
                 throw new ReceiverFailException();
             }
@@ -87,8 +89,25 @@ public class SimpleNetworkListenerImpl implements NetworkListener {
     }
 
     private Response invoke(Request request) throws ReceiverFailException {
-        // TODO
-        Object result = 1;
+        Object result;
+        try {
+            String className = request.getServiceFullyQualifiedName();
+            Class<?> clazz = Class.forName(className);
+
+            String[] typeNames = request.getMethodArgumentTypeFullyQualifiedNames();
+            Class<?>[] types = new Class<?>[typeNames.length];
+            for (int i = 0; i < typeNames.length; i++) {
+                types[i] = Class.forName(typeNames[i]);
+            }
+
+            Object service = iocBridge.getBean(clazz);
+            Method method = service.getClass().getMethod(request.getMethodName(), types);
+            result = method.invoke(service, request.getArguments());
+        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+            throw new ReceiverFailException();
+        }
+
         return new Response(result);
     }
 }
