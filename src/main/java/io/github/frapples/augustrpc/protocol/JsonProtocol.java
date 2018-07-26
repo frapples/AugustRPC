@@ -1,11 +1,14 @@
 package io.github.frapples.augustrpc.protocol;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import io.github.frapples.augustrpc.protocol.exception.SerializeParseException;
 import io.github.frapples.augustrpc.transport.consumer.model.Request;
 import io.github.frapples.augustrpc.transport.consumer.model.Response;
 import java.nio.charset.StandardCharsets;
-import net.jcip.annotations.Immutable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Frapples <isfrapples@outlook.com>
@@ -13,26 +16,13 @@ import net.jcip.annotations.Immutable;
  */
 public class JsonProtocol implements ProtocolInterface {
 
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
+    private final JsonParser jsonParser = new JsonParser();
 
-    @Immutable
-    static private class Pack {
+    static private class ObjectPackField {
 
-        private String fullQualifiedClassName;
-        private String objectJson;
-
-        public Pack(String fullQualifiedClassName, String objectJson) {
-            this.fullQualifiedClassName = fullQualifiedClassName;
-            this.objectJson = objectJson;
-        }
-
-        public String getFullQualifiedClassName() {
-            return fullQualifiedClassName;
-        }
-
-        public Object getObjectJson() {
-            return objectJson;
-        }
+        static final String CLASS_NAME_FIELD_KEY = "fullQualifiedClassName";
+        static final String OBJECT_FILED_KEY = "object";
     }
 
     private class RequestPack {
@@ -40,7 +30,7 @@ public class JsonProtocol implements ProtocolInterface {
         public String serviceFullyQualifiedName;
         public String methodName;
         public String[] methodArgumentTypeFullyQualifiedNames;
-        public byte[][] arguments;
+        public String[] arguments;
 
         public RequestPack() {
         }
@@ -51,16 +41,16 @@ public class JsonProtocol implements ProtocolInterface {
             this.methodArgumentTypeFullyQualifiedNames = request.getMethodArgumentTypeFullyQualifiedNames();
 
             Object[] args = request.getArguments();
-            this.arguments = new byte[args.length][];
+            this.arguments = new String[args.length];
             for (int i = 0; i < args.length; i++) {
-                this.arguments[i] = JsonProtocol.this.serialize(args[i]);
+                this.arguments[i] = new String(JsonProtocol.this.serialize(args[i]), StandardCharsets.UTF_8);
             }
         }
 
         Request toRequest() throws SerializeParseException {
             Object[] args = new Object[this.arguments.length];
             for (int i = 0; i < this.arguments.length; i++) {
-                args[i] = JsonProtocol.this.deserialize(this.arguments[i]);
+                args[i] = JsonProtocol.this.deserialize(this.arguments[i].getBytes(StandardCharsets.UTF_8));
             }
 
             return new Request(
@@ -72,7 +62,9 @@ public class JsonProtocol implements ProtocolInterface {
 
     @Override
     public byte[] serialize(Object object) {
-        Pack pack = new Pack(object.getClass().getName(), gson.toJson(object));
+        Map<String, Object> pack = new HashMap<>();
+        pack.put(ObjectPackField.CLASS_NAME_FIELD_KEY, object.getClass().getName());
+        pack.put(ObjectPackField.OBJECT_FILED_KEY, object);
         String json = gson.toJson(pack);
         return json.getBytes(StandardCharsets.UTF_8);
     }
@@ -80,15 +72,17 @@ public class JsonProtocol implements ProtocolInterface {
     @Override
     public Object deserialize(byte[] bytes) throws SerializeParseException {
         String json = new String(bytes, StandardCharsets.UTF_8);
-        Pack pack = gson.fromJson(json, Pack.class);
+        JsonObject jsonObject = (JsonObject) jsonParser.parse(json);
+        String fullQualifiedClassName = jsonObject.get(ObjectPackField.CLASS_NAME_FIELD_KEY).getAsString();
+
         Class<?> clazz;
         try {
-            clazz = Class.forName(pack.getFullQualifiedClassName());
+            clazz = Class.forName(fullQualifiedClassName);
         } catch (ClassNotFoundException e) {
             throw new SerializeParseException(e.getMessage());
         }
 
-        return gson.fromJson(pack.objectJson, clazz);
+        return gson.fromJson(jsonObject.get(ObjectPackField.OBJECT_FILED_KEY), clazz);
     }
 
     @Override

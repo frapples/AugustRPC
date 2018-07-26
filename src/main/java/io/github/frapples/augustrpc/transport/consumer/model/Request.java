@@ -17,7 +17,7 @@ public class Request {
 
     public Request(String serviceFullyQualifiedName, String methodName, String[] methodArgumentTypeFullyQualifiedNames, Object[] arguments) {
         if (serviceFullyQualifiedName == null || methodName == null ||
-            getMethodArgumentTypeFullyQualifiedNames() == null || arguments == null) {
+            methodArgumentTypeFullyQualifiedNames == null || arguments == null) {
             throw new IllegalArgumentException();
         }
 

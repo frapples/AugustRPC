@@ -31,6 +31,7 @@ public class RpcServiceDynamicProxyHandler<T> implements InvocationHandler {
         for (int i = 0; i < paramterTypes.length; i++) {
             argumentTypeNames[i] = paramterTypes[i].getName();
         }
+        args = args == null ? new Object[0] : args;
 
         Request request = new Request(this.clazz.getName(), method.getName(), argumentTypeNames, args);
         ConsumerTransportContext consumerTransportContext = RpcContext.getInstance()
