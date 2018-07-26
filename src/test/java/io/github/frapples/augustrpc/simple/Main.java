@@ -17,10 +17,10 @@ public class Main {
     }
 
     private static Config getConfig() {
-        Config config = new Config();
-        config.setIocBridgeImplClassName("io.github.frapples.augustrpc.simple.SimpleIocBridge");
-        config.setRequestSenderImplClassName("io.github.frapples.augustrpc.transport.consumer.sender.SimpleRequestSenderImpl");
-        return config;
+        return Config.builder()
+            .iocBridgeImplClassName("io.github.frapples.augustrpc.simple.SimpleIocBridge")
+            .requestSenderImplClassName("io.github.frapples.augustrpc.transport.consumer.sender.SimpleRequestSenderImpl")
+            .build();
     }
 
     private static void cunsumerDemo() {

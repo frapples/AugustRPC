@@ -3,7 +3,7 @@ package io.github.frapples.augustrpc.protocol;
 import com.google.gson.Gson;
 import io.github.frapples.augustrpc.protocol.exception.SerializeParseException;
 import java.nio.charset.StandardCharsets;
-import jdk.nashorn.internal.ir.annotations.Immutable;
+import net.jcip.annotations.Immutable;
 
 /**
  * @author Frapples <isfrapples@outlook.com>
