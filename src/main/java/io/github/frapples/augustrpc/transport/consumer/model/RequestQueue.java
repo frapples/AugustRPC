@@ -1,4 +1,4 @@
-package io.github.frapples.augustrpc.transport.consumer;
+package io.github.frapples.augustrpc.transport.consumer.model;
 
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -40,11 +40,11 @@ public class RequestQueue<T, R> {
         queue = new LinkedBlockingDeque<>(maxSize);
     }
 
-    QueueItem<T, R> poll() throws InterruptedException {
+    public QueueItem<T, R> poll() throws InterruptedException {
         return queue.take();
     }
 
-    R add(T data) throws InterruptedException {
+    public R add(T data) throws InterruptedException {
         QueueItem<T, R> item = new QueueItem<>(data);
         synchronized (item) {
             queue.put(item);

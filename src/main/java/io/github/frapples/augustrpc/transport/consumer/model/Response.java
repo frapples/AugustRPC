@@ -1,4 +1,4 @@
-package io.github.frapples.augustrpc.transport.consumer;
+package io.github.frapples.augustrpc.transport.consumer.model;
 
 /**
  * @author Frapples <isfrapples@outlook.com>

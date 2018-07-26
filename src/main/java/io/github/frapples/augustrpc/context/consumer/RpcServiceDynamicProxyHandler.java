@@ -2,7 +2,7 @@ package io.github.frapples.augustrpc.context.consumer;
 
 import io.github.frapples.augustrpc.context.RpcContext;
 import io.github.frapples.augustrpc.transport.consumer.ConsumerTransportContext;
-import io.github.frapples.augustrpc.transport.consumer.Request;
+import io.github.frapples.augustrpc.transport.consumer.model.Request;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import org.slf4j.Logger;

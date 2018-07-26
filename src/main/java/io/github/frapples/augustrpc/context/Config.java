@@ -7,6 +7,7 @@ package io.github.frapples.augustrpc.context;
 public class Config {
 
     private String iocBridgeImplClassName;
+    private String requestSenderImplClassName;
 
     public String getIocBridgeImplClassName() {
         return iocBridgeImplClassName;
@@ -14,5 +15,13 @@ public class Config {
 
     public void setIocBridgeImplClassName(String iocBridgeImplClassName) {
         this.iocBridgeImplClassName = iocBridgeImplClassName;
+    }
+
+    public String getRequestSenderImplClassName() {
+        return requestSenderImplClassName;
+    }
+
+    public void setRequestSenderImplClassName(String requestSenderImplClassName) {
+        this.requestSenderImplClassName = requestSenderImplClassName;
     }
 }

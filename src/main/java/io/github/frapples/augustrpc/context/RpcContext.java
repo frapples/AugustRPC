@@ -55,7 +55,7 @@ public class RpcContext {
         }
 
         this.providerRpcContext = new ProviderRpcContext(iocBridge);
-        this.consumerTransportContext = new ConsumerTransportContext();
+        this.consumerTransportContext = new ConsumerTransportContext(config.getRequestSenderImplClassName());
         this.consumerTransportContext.init();
     }
 

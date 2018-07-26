@@ -12,21 +12,21 @@ import io.github.frapples.augustrpc.simple.service.SimpleService;
 public class Main {
 
     public static void main(String[] args) throws InitFailException {
-        init();
-        demo();
+        RpcContext.init(getConfig());
+        cunsumerDemo();
     }
 
-    private static void init() throws InitFailException {
+    private static Config getConfig() {
         Config config = new Config();
         config.setIocBridgeImplClassName("io.github.frapples.augustrpc.simple.SimpleIocBridge");
-        RpcContext.init(config);
+        config.setRequestSenderImplClassName("io.github.frapples.augustrpc.transport.consumer.sender.SimpleRequestSenderImpl");
+        return config;
     }
 
-    private static void demo() {
+    private static void cunsumerDemo() {
         SimpleService simpleService = RpcContext.getInstance().getConsumerRpcContext().getService(SimpleService.class);
         System.out.println(simpleService); // Dynamic Proxy Object
         Integer result = simpleService.add(1, 2);
         System.out.println(result);
     }
-
 }

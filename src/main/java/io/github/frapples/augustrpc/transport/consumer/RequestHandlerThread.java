@@ -1,8 +1,11 @@
 package io.github.frapples.augustrpc.transport.consumer;
 
-import io.github.frapples.augustrpc.transport.consumer.RequestQueue.QueueItem;
+import io.github.frapples.augustrpc.transport.consumer.model.RequestQueue;
+import io.github.frapples.augustrpc.transport.consumer.model.RequestQueue.QueueItem;
+import io.github.frapples.augustrpc.transport.consumer.model.Request;
+import io.github.frapples.augustrpc.transport.consumer.model.Response;
+import io.github.frapples.augustrpc.transport.consumer.sender.RequestSender;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * @author Frapples <isfrapples@outlook.com>
@@ -11,10 +14,12 @@ import java.util.function.Function;
 public class RequestHandlerThread extends Thread {
 
     private final RequestQueue<Request, Response> requestQueue;
+    private final RequestSender requestSender;
     private volatile boolean stop = false;
 
-    RequestHandlerThread(RequestQueue<Request, Response> requestQueue) {
+    RequestHandlerThread(RequestQueue<Request, Response> requestQueue, RequestSender requestSender) {
         this.requestQueue = requestQueue;
+        this.requestSender = requestSender;
     }
 
     @Override
@@ -34,8 +39,11 @@ public class RequestHandlerThread extends Thread {
         stop = true;
     }
 
-    private void handleRequest(Object request, Consumer<Response> onComplete) {
-        System.out.println("request");
-        onComplete.accept(null);
+    private void handleRequest(Request request, Consumer<Response> onComplete) {
+        // TODO
+        byte[] data = new byte[0];
+        this.requestSender.send(data, (result, e) -> {
+            onComplete.accept(null);
+        });
     }
 }
