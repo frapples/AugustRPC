@@ -79,7 +79,8 @@ public class RpcContext {
         log.info("Initializing ProviderRpcContext");
         this.providerRpcContext = new ProviderRpcContext(this.iocBridge);
         log.info("Initializing ProviderTransportContext");
-        this.providerTransportContext = new ProviderTransportContext(this.registryManager, this.iocBridge);
+        this.providerTransportContext = new ProviderTransportContext(
+            this.registryManager, this.iocBridge, this.protocolInterface, this.config.getNetworkListenerImplClassName());
         this.providerTransportContext.init();
     }
 

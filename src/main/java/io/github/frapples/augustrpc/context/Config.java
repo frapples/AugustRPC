@@ -11,10 +11,12 @@ public class Config {
 
     private final String iocBridgeImplClassName;
     private final String requestSenderImplClassName;
+    private final String networkListenerImplClassName;
 
-    public Config(String iocBridgeImplClassName, String requestSenderImplClassName) {
+    public Config(String iocBridgeImplClassName, String requestSenderImplClassName, String networkListenerImplClassName) {
         this.iocBridgeImplClassName = iocBridgeImplClassName;
         this.requestSenderImplClassName = requestSenderImplClassName;
+        this.networkListenerImplClassName = networkListenerImplClassName;
     }
 
     public String getIocBridgeImplClassName() {
@@ -23,6 +25,10 @@ public class Config {
 
     public String getRequestSenderImplClassName() {
         return requestSenderImplClassName;
+    }
+
+    public String getNetworkListenerImplClassName() {
+        return networkListenerImplClassName;
     }
 
     public static ConfigBuilder builder() {
@@ -42,6 +48,7 @@ public class Config {
 
         private String iocBridgeImplClassName;
         private String requestSenderImplClassName;
+        private String networkListenerImplClassName;
 
         private ConfigBuilder() {
         }
@@ -56,8 +63,13 @@ public class Config {
             return this;
         }
 
+        public ConfigBuilder networkListenerImplClassName(String networkListenerImplClassName) {
+            this.networkListenerImplClassName = networkListenerImplClassName;
+            return this;
+        }
+
         public Config build() {
-            return new Config(iocBridgeImplClassName, requestSenderImplClassName);
+            return new Config(iocBridgeImplClassName, requestSenderImplClassName, networkListenerImplClassName);
         }
     }
 }
