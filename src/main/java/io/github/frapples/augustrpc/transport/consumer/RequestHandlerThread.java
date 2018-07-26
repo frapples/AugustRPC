@@ -2,6 +2,7 @@ package io.github.frapples.augustrpc.transport.consumer;
 
 import io.github.frapples.augustrpc.protocol.JsonProtocol;
 import io.github.frapples.augustrpc.protocol.ProtocolInterface;
+import io.github.frapples.augustrpc.protocol.exception.SerializeParseException;
 import io.github.frapples.augustrpc.registry.RegistryManager;
 import io.github.frapples.augustrpc.transport.consumer.exception.NoSuitableProviderException;
 import io.github.frapples.augustrpc.transport.consumer.model.ProviderIdentifier;
@@ -77,7 +78,17 @@ public class RequestHandlerThread extends Thread {
         }
 
         this.requestSender.send(providerIdentifier, data, (result, e) -> {
-            onComplete.accept(null, e);
+            if (e == null) {
+                try {
+                    Response response = this.protocolInterface.unpackResponse(result);
+                    onComplete.accept(response, null);
+                } catch (SerializeParseException e1) {
+                    onComplete.accept(null, e1);
+                }
+
+            } else {
+                onComplete.accept(null, e);
+            }
         });
     }
 }

@@ -3,6 +3,7 @@ package io.github.frapples.augustrpc.context.consumer;
 import io.github.frapples.augustrpc.context.RpcContext;
 import io.github.frapples.augustrpc.transport.consumer.ConsumerTransportContext;
 import io.github.frapples.augustrpc.transport.consumer.model.Request;
+import io.github.frapples.augustrpc.transport.consumer.model.Response;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import org.slf4j.Logger;
@@ -36,6 +37,7 @@ public class RpcServiceDynamicProxyHandler<T> implements InvocationHandler {
         Request request = new Request(this.clazz.getName(), method.getName(), argumentTypeNames, args);
         ConsumerTransportContext consumerTransportContext = RpcContext.getInstance()
             .getConsumerTransportContext();
-        return consumerTransportContext.sendCallMessage(request);
+        Response response = consumerTransportContext.sendCallMessage(request);
+        return response.getReturnResult();
     }
 }
