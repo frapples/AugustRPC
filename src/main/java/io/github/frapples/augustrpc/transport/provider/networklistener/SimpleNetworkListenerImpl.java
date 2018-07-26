@@ -36,14 +36,15 @@ public class SimpleNetworkListenerImpl implements NetworkListener {
     }
 
     @Override
-    public void listen() throws ReceiverFailException {
+    public void listen() {
         try (ServerSocket serverSocket = new ServerSocket(providerIdentifier.getPort())) {
             while (true) {
                 Socket socket = serverSocket.accept();
                 handle(socket);
             }
 
-        } catch (IOException e) {
+        } catch (IOException | ReceiverFailException e) {
+            // TODO
             e.printStackTrace();
         }
     }

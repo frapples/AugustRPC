@@ -36,7 +36,7 @@ public class ProviderTransportContext {
             throw new InitFailException(e.getMessage());
         }
         this.providerIdentifier = new ProviderIdentifier("127.0.0.1", port);
-        this.requestHandlerThread = new ListeningThread(iocBridge, this.providerIdentifier);
+        this.requestHandlerThread = new ListeningThread(this.iocBridge, this.providerIdentifier, this.networkListener);
     }
 
     public void init() {
