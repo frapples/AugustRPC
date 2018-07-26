@@ -12,8 +12,7 @@ import net.jcip.annotations.ThreadSafe;
  * @author Frapples <isfrapples@outlook.com>
  * @date 2018/7/26
  *
- * This is a simple implementation for dev and test now.
- * Current implementations are effective only for providers and consumers within the same process.
+ * This is a simple implementation for dev and test now. Current implementations are effective only for providers and consumers within the same process.
  */
 @ThreadSafe
 public class RegistryManager {
@@ -24,7 +23,7 @@ public class RegistryManager {
         String fullyQualifiedName = request.getServiceFullyQualifiedName();
         do {
             List<ProviderIdentifier> list = this.providers.get(fullyQualifiedName);
-            if (list.isEmpty()) {
+            if (list == null || list.isEmpty()) {
                 return null;
             }
             int index = (new Random()).nextInt(list.size());
@@ -40,11 +39,10 @@ public class RegistryManager {
         String fullyQualifiedName = clazz.getName();
         this.providers.compute(fullyQualifiedName, (key, value) -> {
             if (value == null) {
-                return new CopyOnWriteArrayList<>();
-            } else {
-                value.add(providerIdentifier);
-                return value;
+                value = new CopyOnWriteArrayList<>();
             }
+            value.add(providerIdentifier);
+            return value;
         });
     }
 }
