@@ -25,8 +25,14 @@ public class RpcServiceDynamicProxyHandler<T> implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         log.warn("Invoked, class: {}, method: {}, args: {}", this.clazz.getName(), method.getName(), args);
-        // TODO
-        Request request = new Request();
+
+        Class<?>[] paramterTypes = method.getParameterTypes();
+        String[] argumentTypeNames = new String[paramterTypes.length];
+        for (int i = 0; i < paramterTypes.length; i++) {
+            argumentTypeNames[i] = paramterTypes[i].getName();
+        }
+
+        Request request = new Request(this.clazz.getName(), method.getName(), argumentTypeNames, args);
         ConsumerTransportContext consumerTransportContext = RpcContext.getInstance()
             .getConsumerTransportContext();
         return consumerTransportContext.sendCallMessage(request);

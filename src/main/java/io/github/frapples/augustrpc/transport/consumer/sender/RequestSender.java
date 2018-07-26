@@ -1,5 +1,6 @@
 package io.github.frapples.augustrpc.transport.consumer.sender;
 
+import io.github.frapples.augustrpc.transport.consumer.model.ProviderIdentifier;
 import java.util.function.BiConsumer;
 
 /**
@@ -8,5 +9,5 @@ import java.util.function.BiConsumer;
  */
 public interface RequestSender {
 
-    void send(byte[] data, BiConsumer<Byte[], Throwable> onComplete);
+    void send(ProviderIdentifier providerIdentifier, byte[] data, BiConsumer<Byte[], Throwable> onComplete);
 }

@@ -16,6 +16,7 @@ public class RequestQueue<T, R> {
 
         T data;
         R result;
+        Throwable exception;
 
         QueueItem(T data) {
             this.data = data;
@@ -25,9 +26,10 @@ public class RequestQueue<T, R> {
             return data;
         }
 
-        public void complete(R result) {
+        public void complete(R result, Throwable exception) {
             synchronized (this) {
                 this.result = result;
+                this.exception = exception;
                 this.notifyAll();
             }
         }

@@ -2,6 +2,7 @@ package io.github.frapples.augustrpc.transport.consumer;
 
 import io.github.frapples.augustrpc.context.exception.InitFailException;
 import io.github.frapples.augustrpc.iocbridge.CreatedFailException;
+import io.github.frapples.augustrpc.registry.RegistryManager;
 import io.github.frapples.augustrpc.transport.consumer.model.Request;
 import io.github.frapples.augustrpc.transport.consumer.model.RequestQueue;
 import io.github.frapples.augustrpc.transport.consumer.model.Response;
@@ -18,7 +19,7 @@ public class ConsumerTransportContext {
 
     private final RequestQueue<Request, Response> requestQueue;
 
-    public ConsumerTransportContext(String requestSenderClassName) throws InitFailException {
+    public ConsumerTransportContext(String requestSenderClassName, RegistryManager registryManager) throws InitFailException {
 
         RequestSender requestSender;
         try {
@@ -27,7 +28,7 @@ public class ConsumerTransportContext {
             throw new InitFailException(e.getMessage());
         }
         this.requestQueue = new RequestQueue<>(1000);
-        this.requestHandlerThread = new RequestHandlerThread(this.requestQueue, requestSender);
+        this.requestHandlerThread = new RequestHandlerThread(this.requestQueue, requestSender, registryManager);
     }
 
     public void init() {
