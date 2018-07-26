@@ -1,5 +1,6 @@
 package io.github.frapples.augustrpc.context;
 
+import io.github.frapples.augustrpc.context.annotation.AugustRpcService;
 import io.github.frapples.augustrpc.context.consumer.ConsumerRpcContext;
 import io.github.frapples.augustrpc.context.exception.InitFailException;
 import io.github.frapples.augustrpc.context.provider.ProviderRpcContext;
@@ -10,6 +11,7 @@ import io.github.frapples.augustrpc.protocol.JsonProtocol;
 import io.github.frapples.augustrpc.protocol.ProtocolInterface;
 import io.github.frapples.augustrpc.registry.RegistryManager;
 import io.github.frapples.augustrpc.transport.consumer.ConsumerTransportContext;
+import io.github.frapples.augustrpc.transport.provider.ProviderTransportContext;
 import net.jcip.annotations.ThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +32,9 @@ public class RpcContext {
 
     private volatile ConsumerTransportContext consumerTransportContext;
     private volatile ProtocolInterface protocolInterface;
+    private volatile ProviderTransportContext providerTransportContext;
 
+    private volatile IocBridge iocBridge;
     private volatile RegistryManager registryManager;
 
     private final Config config;
@@ -66,15 +70,17 @@ public class RpcContext {
         }
 
         log.info("Initializing IocBridge");
-        IocBridge iocBridge;
         try {
-            iocBridge = IocBridgeFactory.createFromClass(this.config.getIocBridgeImplClassName());
+            this.iocBridge = IocBridgeFactory.createFromClass(this.config.getIocBridgeImplClassName());
         } catch (CreatedFailException e) {
             throw new InitFailException(e.getMessage());
         }
 
         log.info("Initializing ProviderRpcContext");
-        this.providerRpcContext = new ProviderRpcContext(iocBridge);
+        this.providerRpcContext = new ProviderRpcContext(this.iocBridge);
+        log.info("Initializing ProviderTransportContext");
+        this.providerTransportContext = new ProviderTransportContext(this.registryManager, this.iocBridge);
+        this.providerTransportContext.init();
     }
 
     private void initConsumer() throws InitFailException {

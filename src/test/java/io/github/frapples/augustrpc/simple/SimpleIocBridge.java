@@ -17,4 +17,15 @@ public class SimpleIocBridge implements IocBridge {
         }
         return null;
     }
+
+    @Override
+    public Class<?>[] getAllBeanTypes(Class<?> annotation) {
+        return getAllBeanTypesWithAugustRpcService();
+    }
+
+    @Override
+    public Class<?>[] getAllBeanTypesWithAugustRpcService() {
+        return new Class<?>[]{ SimpleIocBridge.class};
+    }
+
 }
