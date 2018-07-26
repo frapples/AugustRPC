@@ -20,5 +20,5 @@ public interface ProtocolInterface {
 
     byte[] packResponse(Response response);
 
-    Response unpackResponse(byte[] bytes);
+    Response unpackResponse(byte[] bytes) throws SerializeParseException;
 }

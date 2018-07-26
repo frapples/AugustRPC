@@ -20,6 +20,7 @@ public class Main {
         return Config.builder()
             .iocBridgeImplClassName("io.github.frapples.augustrpc.simple.SimpleIocBridge")
             .requestSenderImplClassName("io.github.frapples.augustrpc.transport.consumer.sender.SimpleRequestSenderImpl")
+            .networkListenerImplClassName("io.github.frapples.augustrpc.transport.provider.networklistener.SimpleNetworkListenerImpl")
             .build();
     }
 

@@ -60,6 +60,21 @@ public class JsonProtocol implements ProtocolInterface {
         }
     }
 
+    private class ResponsePack {
+        public String returnResult;
+
+
+        public ResponsePack(Response response) {
+            this.returnResult = new String(
+                JsonProtocol.this.serialize(response.getReturnResult()), StandardCharsets.UTF_8);
+        }
+
+        public Response toResponse() throws SerializeParseException {
+            return new Response(JsonProtocol.this.deserialize(this.returnResult.getBytes(StandardCharsets.UTF_8)));
+        }
+
+    }
+
     @Override
     public byte[] serialize(Object object) {
         Map<String, Object> pack = new HashMap<>();
@@ -101,13 +116,15 @@ public class JsonProtocol implements ProtocolInterface {
 
     @Override
     public byte[] packResponse(Response response) {
-        // TODO
-        return new byte[0];
+        ResponsePack responsePack = new ResponsePack(response);
+        String json = gson.toJson(responsePack);
+        return json.getBytes(StandardCharsets.UTF_8);
     }
 
     @Override
-    public Response unpackResponse(byte[] bytes) {
-        // TODO
-        return null;
+    public Response unpackResponse(byte[] bytes) throws SerializeParseException {
+        String json = new String(bytes, StandardCharsets.UTF_8);
+        ResponsePack responsePack = gson.fromJson(json, ResponsePack.class);
+        return responsePack.toResponse();
     }
 }

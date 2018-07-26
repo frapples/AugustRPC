@@ -5,10 +5,12 @@ import io.github.frapples.augustrpc.protocol.ProtocolInterface;
 import io.github.frapples.augustrpc.protocol.exception.SerializeParseException;
 import io.github.frapples.augustrpc.transport.consumer.model.ProviderIdentifier;
 import io.github.frapples.augustrpc.transport.consumer.model.Request;
+import io.github.frapples.augustrpc.transport.consumer.model.Response;
 import io.github.frapples.augustrpc.transport.provider.exception.ReceiverFailException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -58,7 +60,10 @@ public class SimpleNetworkListenerImpl implements NetworkListener {
                 byteArray.write(buffer, 0, count);
             }
             Request request = this.protocolInterface.unpackRequest(byteArray.toByteArray());
-            Object result = invoke(request);
+            Response response = invoke(request);
+            byte[] responsePackedBytes = this.protocolInterface.packResponse(response);
+            OutputStream out = socket.getOutputStream();
+            out.write(responsePackedBytes);
         } catch (IOException | SerializeParseException originException) {
             ReceiverFailException e = new ReceiverFailException();
             e.addSuppressed(originException);
@@ -66,8 +71,9 @@ public class SimpleNetworkListenerImpl implements NetworkListener {
         }
     }
 
-    private Object invoke(Request request) throws ReceiverFailException {
+    private Response invoke(Request request) throws ReceiverFailException {
         // TODO
-        return null;
+        Object result = null;
+        return new Response(result);
     }
 }
