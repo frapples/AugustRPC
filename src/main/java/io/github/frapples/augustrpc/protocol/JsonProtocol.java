@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import io.github.frapples.augustrpc.protocol.exception.SerializeParseException;
 import io.github.frapples.augustrpc.transport.consumer.model.Request;
 import io.github.frapples.augustrpc.transport.consumer.model.Response;
+import io.github.frapples.augustrpc.utils.StringUtils;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,10 +48,10 @@ public class JsonProtocol implements ProtocolInterface {
             }
         }
 
-        Request toRequest() throws SerializeParseException {
+        Request toRequest(JsonProtocol that) throws SerializeParseException {
             Object[] args = new Object[this.arguments.length];
             for (int i = 0; i < this.arguments.length; i++) {
-                args[i] = JsonProtocol.this.deserialize(this.arguments[i].getBytes(StandardCharsets.UTF_8));
+                args[i] = that.deserialize(this.arguments[i].getBytes(StandardCharsets.UTF_8));
             }
 
             return new Request(
@@ -69,8 +70,8 @@ public class JsonProtocol implements ProtocolInterface {
                 JsonProtocol.this.serialize(response.getReturnResult()), StandardCharsets.UTF_8);
         }
 
-        public Response toResponse() throws SerializeParseException {
-            return new Response(JsonProtocol.this.deserialize(this.returnResult.getBytes(StandardCharsets.UTF_8)));
+        public Response toResponse(JsonProtocol that) throws SerializeParseException {
+            return new Response(that.deserialize(this.returnResult.getBytes(StandardCharsets.UTF_8)));
         }
 
     }
@@ -78,7 +79,11 @@ public class JsonProtocol implements ProtocolInterface {
     @Override
     public byte[] serialize(Object object) {
         Map<String, Object> pack = new HashMap<>();
-        pack.put(ObjectPackField.CLASS_NAME_FIELD_KEY, object.getClass().getName());
+        if (object != null) {
+            pack.put(ObjectPackField.CLASS_NAME_FIELD_KEY, object.getClass().getName());
+        } else {
+            pack.put(ObjectPackField.CLASS_NAME_FIELD_KEY, "");
+        }
         pack.put(ObjectPackField.OBJECT_FILED_KEY, object);
         String json = gson.toJson(pack);
         return json.getBytes(StandardCharsets.UTF_8);
@@ -89,6 +94,9 @@ public class JsonProtocol implements ProtocolInterface {
         String json = new String(bytes, StandardCharsets.UTF_8);
         JsonObject jsonObject = (JsonObject) jsonParser.parse(json);
         String fullQualifiedClassName = jsonObject.get(ObjectPackField.CLASS_NAME_FIELD_KEY).getAsString();
+        if (StringUtils.isEmpty(fullQualifiedClassName)) {
+            return null;
+        }
 
         Class<?> clazz;
         try {
@@ -111,7 +119,7 @@ public class JsonProtocol implements ProtocolInterface {
     public Request unpackRequest(byte[] bytes) throws SerializeParseException {
         String json = new String(bytes, StandardCharsets.UTF_8);
         RequestPack requestPack = gson.fromJson(json, RequestPack.class);
-        return requestPack.toRequest();
+        return requestPack.toRequest(this);
     }
 
     @Override
@@ -125,6 +133,6 @@ public class JsonProtocol implements ProtocolInterface {
     public Response unpackResponse(byte[] bytes) throws SerializeParseException {
         String json = new String(bytes, StandardCharsets.UTF_8);
         ResponsePack responsePack = gson.fromJson(json, ResponsePack.class);
-        return responsePack.toResponse();
+        return responsePack.toResponse(this);
     }
 }
