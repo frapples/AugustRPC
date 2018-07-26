@@ -1,6 +1,7 @@
 package io.github.frapples.augustrpc.transport.consumer.sender;
 
 import io.github.frapples.augustrpc.transport.consumer.model.ProviderIdentifier;
+import io.github.frapples.augustrpc.utils.ByteOrderUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +29,8 @@ public class SimpleRequestSenderImpl implements RequestSender {
 
         try (Socket socket = new Socket(providerIdentifier.getIp(), providerIdentifier.getPort())) {
             OutputStream out = socket.getOutputStream();
+            int size = data.length;
+            out.write(ByteOrderUtils.intToBytesWithBigEndian(size));
             out.write(data);
 
             InputStream in = socket.getInputStream();
