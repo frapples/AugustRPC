@@ -11,6 +11,6 @@ public class RegistryManager {
 
     public ProviderIdentifier getProvider(Request request) {
         // TODO
-        return new ProviderIdentifier();
+        return new ProviderIdentifier("127.0.0.1", 4567);
     }
 }

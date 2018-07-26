@@ -11,6 +11,8 @@ import io.github.frapples.augustrpc.protocol.ProtocolInterface;
 import io.github.frapples.augustrpc.registry.RegistryManager;
 import io.github.frapples.augustrpc.transport.consumer.ConsumerTransportContext;
 import net.jcip.annotations.ThreadSafe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Frapples <isfrapples@outlook.com>
@@ -18,6 +20,8 @@ import net.jcip.annotations.ThreadSafe;
  */
 @ThreadSafe
 public class RpcContext {
+
+    private final static Logger log = LoggerFactory.getLogger(RpcContext.class);
 
     private static volatile RpcContext instance = null;
 
@@ -42,10 +46,16 @@ public class RpcContext {
     }
 
     private RpcContext(Config config) throws InitFailException {
+        log.info("Initializing August RPC with config {}...", config);
         this.config = config;
+        log.info("Initializing RegistryManager");
         this.registryManager = new RegistryManager();
+        log.info("Initializing ProtocolInterface");
         this.protocolInterface = new JsonProtocol();
+
+        log.info("Initializing provider side...", config);
         initProvider();
+        log.info("Initializing consumer side...", config);
         initConsumer();
     }
 
@@ -55,6 +65,7 @@ public class RpcContext {
             return;
         }
 
+        log.info("Initializing IocBridge");
         IocBridge iocBridge;
         try {
             iocBridge = IocBridgeFactory.createFromClass(this.config.getIocBridgeImplClassName());
@@ -62,20 +73,23 @@ public class RpcContext {
             throw new InitFailException(e.getMessage());
         }
 
+        log.info("Initializing ProviderRpcContext");
         this.providerRpcContext = new ProviderRpcContext(iocBridge);
+    }
+
+    private void initConsumer() throws InitFailException {
+        if (this.consumerRpcContext != null) {
+            return;
+        }
+
+        log.info("Initializing ConsumerRpcContext");
+        this.consumerRpcContext = new ConsumerRpcContext();
+        log.info("Initializing ConsumerTransportContext");
         this.consumerTransportContext = new ConsumerTransportContext(
             config.getRequestSenderImplClassName(),
             this.registryManager,
             this.protocolInterface);
         this.consumerTransportContext.init();
-    }
-
-    private void initConsumer() {
-        if (this.consumerRpcContext != null) {
-            return;
-        }
-
-        this.consumerRpcContext = new ConsumerRpcContext();
     }
 
     public ConsumerTransportContext getConsumerTransportContext() {

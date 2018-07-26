@@ -1,5 +1,6 @@
 package io.github.frapples.augustrpc.transport.consumer;
 
+import io.github.frapples.augustrpc.protocol.JsonProtocol;
 import io.github.frapples.augustrpc.protocol.ProtocolInterface;
 import io.github.frapples.augustrpc.registry.RegistryManager;
 import io.github.frapples.augustrpc.transport.consumer.exception.NoSuitableProviderException;
@@ -11,12 +12,16 @@ import io.github.frapples.augustrpc.transport.consumer.model.Response;
 import io.github.frapples.augustrpc.transport.consumer.sender.RequestSender;
 import java.nio.charset.StandardCharsets;
 import java.util.function.BiConsumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Frapples <isfrapples@outlook.com>
  * @date 2018/7/25
  */
 public class RequestHandlerThread extends Thread {
+
+    private final static Logger log = LoggerFactory.getLogger(RequestHandlerThread.class);
 
     private final RequestSender requestSender;
     private final RegistryManager registryManager;
@@ -53,6 +58,12 @@ public class RequestHandlerThread extends Thread {
 
     private void handleRequest(Request request, BiConsumer<Response, Throwable> onComplete) {
         ProviderIdentifier providerIdentifier = this.registryManager.getProvider(request);
+
+        log.info("Handle Request, provider: {}, service class: {}, method: {}",
+            providerIdentifier,
+            request.getServiceFullyQualifiedName(),
+            request.getMethodName());
+
         if (providerIdentifier == null) {
             onComplete.accept(null, new NoSuitableProviderException(
                 String.format("Service class: %s", request.getServiceFullyQualifiedName())));
@@ -60,7 +71,11 @@ public class RequestHandlerThread extends Thread {
         }
 
         byte[] data = protocolInterface.packRequest(request);
-        System.out.println(new String(data, StandardCharsets.UTF_8));
+
+        if (protocolInterface instanceof JsonProtocol) {
+            log.info("Request packed bytes (to String): {}", new String(data, StandardCharsets.UTF_8));
+        }
+
         this.requestSender.send(providerIdentifier, data, (result, e) -> {
             onComplete.accept(null, e);
         });

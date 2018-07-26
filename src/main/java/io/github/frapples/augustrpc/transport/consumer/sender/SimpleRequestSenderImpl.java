@@ -20,7 +20,6 @@ public class SimpleRequestSenderImpl implements RequestSender {
 
     @Override
     public void send(ProviderIdentifier providerIdentifier, byte[] data, BiConsumer<byte[], Throwable> onComplete) {
-        System.out.println("request");
         this.sendData(providerIdentifier, data, onComplete);
     }
 

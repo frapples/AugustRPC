@@ -29,6 +29,14 @@ public class Config {
         return new ConfigBuilder();
     }
 
+    @Override
+    public String toString() {
+        return "Config{" +
+            "iocBridgeImplClassName='" + iocBridgeImplClassName + '\'' +
+            ", requestSenderImplClassName='" + requestSenderImplClassName + '\'' +
+            '}';
+    }
+
 
     public static final class ConfigBuilder {
 
