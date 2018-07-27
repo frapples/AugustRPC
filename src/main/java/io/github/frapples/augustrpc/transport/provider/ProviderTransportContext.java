@@ -5,7 +5,7 @@ import io.github.frapples.augustrpc.iocbridge.CreatedFailException;
 import io.github.frapples.augustrpc.iocbridge.IocBridge;
 import io.github.frapples.augustrpc.protocol.ProtocolInterface;
 import io.github.frapples.augustrpc.registry.RegistryManager;
-import io.github.frapples.augustrpc.transport.consumer.model.ProviderIdentifier;
+import io.github.frapples.augustrpc.transport.model.ProviderIdentifier;
 import io.github.frapples.augustrpc.transport.provider.invoker.ServiceInvoker;
 import io.github.frapples.augustrpc.transport.provider.networklistener.NetworkListener;
 import io.github.frapples.augustrpc.transport.provider.networklistener.NetworkListenerFactory;

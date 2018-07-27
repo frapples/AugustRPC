@@ -1,7 +1,7 @@
 package io.github.frapples.augustrpc.transport.provider;
 
 import io.github.frapples.augustrpc.iocbridge.IocBridge;
-import io.github.frapples.augustrpc.transport.consumer.model.ProviderIdentifier;
+import io.github.frapples.augustrpc.transport.model.ProviderIdentifier;
 import io.github.frapples.augustrpc.transport.provider.networklistener.NetworkListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

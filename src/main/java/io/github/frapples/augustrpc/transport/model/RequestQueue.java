@@ -1,4 +1,4 @@
-package io.github.frapples.augustrpc.transport.consumer.model;
+package io.github.frapples.augustrpc.transport.model;
 
 import io.github.frapples.augustrpc.transport.consumer.exception.RequestFailException;
 import java.util.concurrent.BlockingDeque;

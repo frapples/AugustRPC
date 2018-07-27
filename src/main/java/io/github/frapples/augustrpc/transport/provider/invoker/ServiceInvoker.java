@@ -1,8 +1,8 @@
 package io.github.frapples.augustrpc.transport.provider.invoker;
 
 import io.github.frapples.augustrpc.iocbridge.IocBridge;
-import io.github.frapples.augustrpc.transport.consumer.model.Request;
-import io.github.frapples.augustrpc.transport.consumer.model.Response;
+import io.github.frapples.augustrpc.transport.model.Request;
+import io.github.frapples.augustrpc.transport.model.Response;
 import io.github.frapples.augustrpc.transport.provider.exception.ReceiverFailException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

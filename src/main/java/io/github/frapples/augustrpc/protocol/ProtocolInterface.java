@@ -1,8 +1,8 @@
 package io.github.frapples.augustrpc.protocol;
 
 import io.github.frapples.augustrpc.protocol.exception.SerializeParseException;
-import io.github.frapples.augustrpc.transport.consumer.model.Request;
-import io.github.frapples.augustrpc.transport.consumer.model.Response;
+import io.github.frapples.augustrpc.transport.model.Request;
+import io.github.frapples.augustrpc.transport.model.Response;
 
 /**
  * @author Frapples <isfrapples@outlook.com>

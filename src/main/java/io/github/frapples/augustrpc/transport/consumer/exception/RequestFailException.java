@@ -8,4 +8,11 @@ import io.github.frapples.augustrpc.exception.AugustRpcException;
  */
 public class RequestFailException extends AugustRpcException {
 
+    public RequestFailException() {
+    }
+
+    public RequestFailException(String msg) {
+        super(msg);
+    }
+
 }

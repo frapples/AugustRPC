@@ -1,7 +1,7 @@
 package io.github.frapples.augustrpc.registry;
 
-import io.github.frapples.augustrpc.transport.consumer.model.ProviderIdentifier;
-import io.github.frapples.augustrpc.transport.consumer.model.Request;
+import io.github.frapples.augustrpc.transport.model.ProviderIdentifier;
+import io.github.frapples.augustrpc.transport.model.Request;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;

@@ -1,7 +1,7 @@
 package io.github.frapples.augustrpc.transport.provider.networklistener;
 
 import io.github.frapples.augustrpc.protocol.ProtocolInterface;
-import io.github.frapples.augustrpc.transport.consumer.model.ProviderIdentifier;
+import io.github.frapples.augustrpc.transport.model.ProviderIdentifier;
 import io.github.frapples.augustrpc.transport.provider.invoker.ServiceInvoker;
 
 /**

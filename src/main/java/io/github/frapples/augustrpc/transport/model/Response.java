@@ -1,4 +1,4 @@
-package io.github.frapples.augustrpc.transport.consumer.model;
+package io.github.frapples.augustrpc.transport.model;
 
 
 import net.jcip.annotations.Immutable;

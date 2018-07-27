@@ -1,6 +1,6 @@
 package io.github.frapples.augustrpc.transport.consumer.sender;
 
-import io.github.frapples.augustrpc.transport.consumer.model.ProviderIdentifier;
+import io.github.frapples.augustrpc.transport.model.ProviderIdentifier;
 import io.github.frapples.augustrpc.utils.ByteOrderUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
