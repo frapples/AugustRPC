@@ -7,13 +7,12 @@ import io.github.frapples.augustrpc.transport.consumer.model.ProviderIdentifier;
 import io.github.frapples.augustrpc.transport.consumer.model.Request;
 import io.github.frapples.augustrpc.transport.consumer.model.Response;
 import io.github.frapples.augustrpc.transport.provider.exception.ReceiverFailException;
+import io.github.frapples.augustrpc.transport.provider.invoker.ServiceInvoker;
 import io.github.frapples.augustrpc.utils.ByteOrderUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
@@ -28,13 +27,13 @@ public class SimpleNetworkListenerImpl implements NetworkListener {
 
     private static final int BUFFER_SIZE = 2048;
 
-    private IocBridge iocBridge;
+    private ServiceInvoker serviceInvoker;
     private ProviderIdentifier providerIdentifier;
     private ProtocolInterface protocolInterface;
 
     @Override
-    public void init(IocBridge iocBridge, ProviderIdentifier providerIdentifier, ProtocolInterface protocolInterface) {
-        this.iocBridge = iocBridge;
+    public void init(ServiceInvoker serviceInvoker, ProviderIdentifier providerIdentifier, ProtocolInterface protocolInterface) {
+        this.serviceInvoker = serviceInvoker;
         this.providerIdentifier = providerIdentifier;
         this.protocolInterface = protocolInterface;
     }
@@ -76,7 +75,7 @@ public class SimpleNetworkListenerImpl implements NetworkListener {
                 byteArray.write(buffer, 0, count);
             }
             Request request = this.protocolInterface.unpackRequest(byteArray.toByteArray());
-            Response response = invoke(request);
+            Response response = serviceInvoker.invoke(request);
             byte[] responsePackedBytes = this.protocolInterface.packResponse(response);
             OutputStream out = socket.getOutputStream();
             out.write(responsePackedBytes);
@@ -86,28 +85,5 @@ public class SimpleNetworkListenerImpl implements NetworkListener {
             e.addSuppressed(originException);
             throw e;
         }
-    }
-
-    private Response invoke(Request request) throws ReceiverFailException {
-        Object result;
-        try {
-            String className = request.getServiceFullyQualifiedName();
-            Class<?> clazz = Class.forName(className);
-
-            String[] typeNames = request.getMethodArgumentTypeFullyQualifiedNames();
-            Class<?>[] types = new Class<?>[typeNames.length];
-            for (int i = 0; i < typeNames.length; i++) {
-                types[i] = Class.forName(typeNames[i]);
-            }
-
-            Object service = iocBridge.getBean(clazz);
-            Method method = service.getClass().getMethod(request.getMethodName(), types);
-            result = method.invoke(service, request.getArguments());
-        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-            throw new ReceiverFailException();
-        }
-
-        return new Response(result);
     }
 }

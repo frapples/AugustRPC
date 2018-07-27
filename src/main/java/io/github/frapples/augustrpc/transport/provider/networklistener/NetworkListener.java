@@ -1,8 +1,8 @@
 package io.github.frapples.augustrpc.transport.provider.networklistener;
 
-import io.github.frapples.augustrpc.iocbridge.IocBridge;
 import io.github.frapples.augustrpc.protocol.ProtocolInterface;
 import io.github.frapples.augustrpc.transport.consumer.model.ProviderIdentifier;
+import io.github.frapples.augustrpc.transport.provider.invoker.ServiceInvoker;
 
 /**
  * @author Frapples <isfrapples@outlook.com>
@@ -10,7 +10,7 @@ import io.github.frapples.augustrpc.transport.consumer.model.ProviderIdentifier;
  */
 public interface NetworkListener {
 
-    void init(IocBridge iocBridge, ProviderIdentifier providerIdentifier, ProtocolInterface protocolInterface);
+    void init(ServiceInvoker serviceInvoker, ProviderIdentifier providerIdentifier, ProtocolInterface protocolInterface);
 
     void listen();
 

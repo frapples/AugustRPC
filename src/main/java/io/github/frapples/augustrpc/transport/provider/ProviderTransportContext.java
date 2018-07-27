@@ -6,6 +6,7 @@ import io.github.frapples.augustrpc.iocbridge.IocBridge;
 import io.github.frapples.augustrpc.protocol.ProtocolInterface;
 import io.github.frapples.augustrpc.registry.RegistryManager;
 import io.github.frapples.augustrpc.transport.consumer.model.ProviderIdentifier;
+import io.github.frapples.augustrpc.transport.provider.invoker.ServiceInvoker;
 import io.github.frapples.augustrpc.transport.provider.networklistener.NetworkListener;
 import io.github.frapples.augustrpc.transport.provider.networklistener.NetworkListenerFactory;
 import java.util.Random;
@@ -22,6 +23,7 @@ public class ProviderTransportContext {
 
     private final NetworkListener networkListener;
     private final ListeningThread requestHandlerThread;
+    private final ServiceInvoker serviceInvoker;
     private final ProviderIdentifier providerIdentifier;
 
     public ProviderTransportContext(RegistryManager registryManager, IocBridge iocBridge,
@@ -29,6 +31,7 @@ public class ProviderTransportContext {
         this.registryManager = registryManager;
         this.iocBridge = iocBridge;
         this.protocolInterface = protocolInterface;
+        this.serviceInvoker = new ServiceInvoker(this.iocBridge);
         int port = (new Random()).nextInt(10000) + 10000;
         try {
             this.networkListener = NetworkListenerFactory.createFromClass(networkListenerClassName);
@@ -41,7 +44,7 @@ public class ProviderTransportContext {
 
     public void init() {
 
-        this.networkListener.init(this.iocBridge, this.providerIdentifier, this.protocolInterface);
+        this.networkListener.init(this.serviceInvoker, this.providerIdentifier, this.protocolInterface);
         Class<?>[] serviceTypes = this.iocBridge.getAllBeanTypesWithAugustRpcService();
         for (Class<?> clazz : serviceTypes) {
             this.registryManager.addProvider(clazz, providerIdentifier);
