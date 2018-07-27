@@ -13,4 +13,9 @@ public class SimpleServiceImpl implements SimpleService {
     public Integer add(Integer a, Integer b) {
         return a + b;
     }
+
+    @Override
+    public int sub(int a, int b) {
+        return a - b;
+    }
 }

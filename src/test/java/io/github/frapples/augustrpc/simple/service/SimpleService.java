@@ -11,4 +11,6 @@ public interface SimpleService {
 
     Integer add(Integer a, Integer b);
 
+    int sub(int a, int b);
+
 }

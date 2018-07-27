@@ -29,5 +29,7 @@ public class Main {
         System.out.println(simpleService); // Dynamic Proxy Object
         Integer result = simpleService.add(1, 2);
         System.out.println(result);
+        result = simpleService.sub(1, 2);
+        System.out.println(result);
     }
 }

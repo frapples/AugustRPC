@@ -20,7 +20,7 @@ public class RegistryManager {
     private final ConcurrentHashMap<String, List<ProviderIdentifier>> providers = new ConcurrentHashMap<>();
 
     public ProviderIdentifier getProvider(Request request) {
-        String fullyQualifiedName = request.getServiceFullyQualifiedName();
+        String fullyQualifiedName = request.getCallId().getServiceFullyQualifiedName();
         do {
             List<ProviderIdentifier> list = this.providers.get(fullyQualifiedName);
             if (list == null || list.isEmpty()) {

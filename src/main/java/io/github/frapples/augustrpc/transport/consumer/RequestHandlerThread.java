@@ -62,12 +62,12 @@ public class RequestHandlerThread extends Thread {
 
         log.info("Handle Request, provider: {}, service class: {}, method: {}",
             providerIdentifier,
-            request.getServiceFullyQualifiedName(),
-            request.getMethodName());
+            request.getCallId().getServiceFullyQualifiedName(),
+            request.getCallId().getMethodName());
 
         if (providerIdentifier == null) {
             onComplete.accept(null, new NoSuitableProviderException(
-                String.format("Service class: %s", request.getServiceFullyQualifiedName())));
+                String.format("Service class: %s", request.getCallId().getServiceFullyQualifiedName())));
             return;
         }
 

@@ -2,6 +2,7 @@ package io.github.frapples.augustrpc.service.consumer;
 
 import io.github.frapples.augustrpc.service.RpcContext;
 import io.github.frapples.augustrpc.transport.consumer.ConsumerTransportContext;
+import io.github.frapples.augustrpc.transport.model.CallId;
 import io.github.frapples.augustrpc.transport.model.Request;
 import io.github.frapples.augustrpc.transport.model.Response;
 import java.lang.reflect.InvocationHandler;
@@ -27,14 +28,9 @@ public class RpcServiceDynamicProxyHandler<T> implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         log.warn("Invoked, class: {}, method: {}, args: {}", this.clazz.getName(), method.getName(), args);
 
-        Class<?>[] paramterTypes = method.getParameterTypes();
-        String[] argumentTypeNames = new String[paramterTypes.length];
-        for (int i = 0; i < paramterTypes.length; i++) {
-            argumentTypeNames[i] = paramterTypes[i].getName();
-        }
         args = args == null ? new Object[0] : args;
-
-        Request request = new Request(this.clazz.getName(), method.getName(), argumentTypeNames, args);
+        CallId callId = CallId.of(clazz, method);
+        Request request = new Request(callId, args);
         ConsumerTransportContext consumerTransportContext = RpcContext.getInstance()
             .getConsumerTransportContext();
         Response response = consumerTransportContext.sendCallMessage(request);

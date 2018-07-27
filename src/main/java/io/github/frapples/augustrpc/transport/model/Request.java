@@ -10,37 +10,30 @@ import net.jcip.annotations.Immutable;
 @Immutable
 public class Request {
 
-    private final String serviceFullyQualifiedName;
-    private final String methodName;
-    private final String[] methodArgumentTypeFullyQualifiedNames;
+    /**
+     * Identifies which method is invoked
+     */
+    private final CallId callId;
+    /**
+     * When the function is called, the arguments passed in
+     */
     private final Object[] arguments;
 
-    public Request(String serviceFullyQualifiedName, String methodName, String[] methodArgumentTypeFullyQualifiedNames, Object[] arguments) {
-        if (serviceFullyQualifiedName == null || methodName == null ||
-            methodArgumentTypeFullyQualifiedNames == null || arguments == null) {
+    public Request(CallId callId, Object[] arguments) {
+        if (callId == null || arguments == null) {
             throw new IllegalArgumentException();
         }
 
-        this.serviceFullyQualifiedName = serviceFullyQualifiedName;
-        this.methodName = methodName;
-        this.methodArgumentTypeFullyQualifiedNames = methodArgumentTypeFullyQualifiedNames;
+        this.callId = callId;
         this.arguments = arguments;
     }
 
-    public String getServiceFullyQualifiedName() {
-        return serviceFullyQualifiedName;
-    }
 
-    public String getMethodName() {
-        return methodName;
-    }
-
-    public String[] getMethodArgumentTypeFullyQualifiedNames() {
-        return methodArgumentTypeFullyQualifiedNames;
+    public CallId getCallId() {
+        return callId;
     }
 
     public Object[] getArguments() {
         return arguments;
     }
-
 }

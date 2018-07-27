@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.github.frapples.augustrpc.protocol.exception.SerializeParseException;
+import io.github.frapples.augustrpc.transport.model.CallId;
 import io.github.frapples.augustrpc.transport.model.Request;
 import io.github.frapples.augustrpc.transport.model.Response;
 import io.github.frapples.augustrpc.utils.StringUtils;
@@ -28,19 +29,14 @@ public class JsonProtocolImpl implements ProtocolInterface {
 
     private class RequestPack {
 
-        public String serviceFullyQualifiedName;
-        public String methodName;
-        public String[] methodArgumentTypeFullyQualifiedNames;
+        CallId callId;
         public String[] arguments;
 
         public RequestPack() {
         }
 
         RequestPack(Request request) {
-            this.serviceFullyQualifiedName = request.getServiceFullyQualifiedName();
-            this.methodName = request.getMethodName();
-            this.methodArgumentTypeFullyQualifiedNames = request.getMethodArgumentTypeFullyQualifiedNames();
-
+            this.callId = request.getCallId();
             Object[] args = request.getArguments();
             this.arguments = new String[args.length];
             for (int i = 0; i < args.length; i++) {
@@ -54,14 +50,12 @@ public class JsonProtocolImpl implements ProtocolInterface {
                 args[i] = that.deserialize(this.arguments[i]);
             }
 
-            return new Request(
-                this.serviceFullyQualifiedName,
-                this.methodName, this.methodArgumentTypeFullyQualifiedNames,
-                args);
+            return new Request(this.callId, args);
         }
     }
 
     private class ResponsePack {
+
         public String returnResult;
 
 
