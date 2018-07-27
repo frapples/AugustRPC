@@ -1,6 +1,6 @@
 package io.github.frapples.augustrpc.transport.consumer;
 
-import io.github.frapples.augustrpc.protocol.JsonProtocol;
+import io.github.frapples.augustrpc.protocol.JsonProtocolImpl;
 import io.github.frapples.augustrpc.protocol.ProtocolInterface;
 import io.github.frapples.augustrpc.protocol.exception.SerializeParseException;
 import io.github.frapples.augustrpc.registry.RegistryManager;
@@ -73,7 +73,7 @@ public class RequestHandlerThread extends Thread {
 
         byte[] data = protocolInterface.packRequest(request);
 
-        if (protocolInterface instanceof JsonProtocol) {
+        if (protocolInterface instanceof JsonProtocolImpl) {
             log.info("Request packed bytes (to String): {}", new String(data, StandardCharsets.UTF_8));
         }
 

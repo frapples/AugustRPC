@@ -1,4 +1,4 @@
-package io.github.frapples.augustrpc.iocbridge;
+package io.github.frapples.augustrpc.exception;
 
 import io.github.frapples.augustrpc.exception.AugustRpcException;
 

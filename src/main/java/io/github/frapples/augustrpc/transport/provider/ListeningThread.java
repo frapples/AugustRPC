@@ -1,6 +1,5 @@
 package io.github.frapples.augustrpc.transport.provider;
 
-import io.github.frapples.augustrpc.iocbridge.IocBridge;
 import io.github.frapples.augustrpc.transport.model.ProviderIdentifier;
 import io.github.frapples.augustrpc.transport.provider.networklistener.NetworkListener;
 import org.slf4j.Logger;
@@ -14,16 +13,14 @@ public class ListeningThread extends Thread {
 
     private final static Logger log = LoggerFactory.getLogger(ListeningThread.class);
 
-    private final IocBridge iocBridge;
     private final NetworkListener networkListener;
 
     private final ProviderIdentifier providerIdentifier;
 
     private volatile boolean stop = false;
 
-    public ListeningThread(IocBridge iocBridge, ProviderIdentifier providerIdentifier,
+    public ListeningThread(ProviderIdentifier providerIdentifier,
         NetworkListener networkListener) {
-        this.iocBridge = iocBridge;
         this.networkListener = networkListener;
         this.providerIdentifier = providerIdentifier;
     }

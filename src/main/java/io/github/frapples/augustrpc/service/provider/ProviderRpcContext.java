@@ -1,9 +1,9 @@
-package io.github.frapples.augustrpc.context.provider;
+package io.github.frapples.augustrpc.service.provider;
 
-import io.github.frapples.augustrpc.context.annotation.AugustRpcProvider;
-import io.github.frapples.augustrpc.context.annotation.AugustRpcService;
-import io.github.frapples.augustrpc.context.exception.RpcServiceTypeErrorException;
-import io.github.frapples.augustrpc.iocbridge.IocBridge;
+import io.github.frapples.augustrpc.service.annotation.AugustRpcProvider;
+import io.github.frapples.augustrpc.service.annotation.AugustRpcService;
+import io.github.frapples.augustrpc.service.exception.RpcServiceTypeErrorException;
+import io.github.frapples.augustrpc.service.iocbridge.IocBridge;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,7 +41,7 @@ public class ProviderRpcContext {
             return;
         }
 
-        if (clazz.isAssignableFrom(service.getClass())) {
+        if (!clazz.isAssignableFrom(service.getClass())) {
             throw new RpcServiceTypeErrorException(
                 String.format("Required: %s, Actual: %s", clazz.getName(), service.getClass().getName()));
         }
@@ -85,6 +85,10 @@ public class ProviderRpcContext {
         }
 
         return (T) service;
+    }
+
+    public Class<?>[] getAllBeanTypesWithAugustRpcService() {
+        return this.iocBridge.getAllBeanTypesWithAugustRpcService();
     }
 
 }

@@ -1,6 +1,6 @@
-package io.github.frapples.augustrpc.context.consumer;
+package io.github.frapples.augustrpc.service.consumer;
 
-import io.github.frapples.augustrpc.context.annotation.AugustRpcService;
+import io.github.frapples.augustrpc.service.annotation.AugustRpcService;
 import java.lang.reflect.Proxy;
 import net.jcip.annotations.ThreadSafe;
 import org.slf4j.Logger;

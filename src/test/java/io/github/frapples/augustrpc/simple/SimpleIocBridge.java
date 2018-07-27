@@ -1,6 +1,6 @@
 package io.github.frapples.augustrpc.simple;
 
-import io.github.frapples.augustrpc.iocbridge.IocBridge;
+import io.github.frapples.augustrpc.service.iocbridge.IocBridge;
 import io.github.frapples.augustrpc.simple.service.SimpleService;
 import io.github.frapples.augustrpc.simple.service.SimpleServiceImpl;
 

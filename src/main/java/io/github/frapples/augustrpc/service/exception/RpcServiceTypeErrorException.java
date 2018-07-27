@@ -1,4 +1,4 @@
-package io.github.frapples.augustrpc.context.exception;
+package io.github.frapples.augustrpc.service.exception;
 
 import io.github.frapples.augustrpc.exception.AugustRpcRuntimeException;
 

@@ -1,6 +1,6 @@
 package io.github.frapples.augustrpc.transport.consumer.sender;
 
-import io.github.frapples.augustrpc.iocbridge.CreatedFailException;
+import io.github.frapples.augustrpc.exception.CreatedFailException;
 import io.github.frapples.augustrpc.utils.StringUtils;
 
 /**

@@ -1,4 +1,4 @@
-package io.github.frapples.augustrpc.context;
+package io.github.frapples.augustrpc.service;
 
 import net.jcip.annotations.Immutable;
 

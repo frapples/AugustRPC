@@ -1,4 +1,4 @@
-package io.github.frapples.augustrpc.iocbridge;
+package io.github.frapples.augustrpc.service.iocbridge;
 
 import net.jcip.annotations.ThreadSafe;
 

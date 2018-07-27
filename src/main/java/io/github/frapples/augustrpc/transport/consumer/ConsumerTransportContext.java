@@ -1,7 +1,6 @@
 package io.github.frapples.augustrpc.transport.consumer;
 
-import io.github.frapples.augustrpc.context.exception.InitFailException;
-import io.github.frapples.augustrpc.iocbridge.CreatedFailException;
+import io.github.frapples.augustrpc.exception.CreatedFailException;
 import io.github.frapples.augustrpc.protocol.ProtocolInterface;
 import io.github.frapples.augustrpc.registry.RegistryManager;
 import io.github.frapples.augustrpc.transport.consumer.exception.RequestFailException;
@@ -22,14 +21,9 @@ public class ConsumerTransportContext {
     private final RequestQueue<Request, Response> requestQueue;
 
     public ConsumerTransportContext(String requestSenderClassName, RegistryManager registryManager,
-        ProtocolInterface protocolInterface) throws InitFailException {
+        ProtocolInterface protocolInterface) throws CreatedFailException {
 
-        RequestSender requestSender;
-        try {
-            requestSender = RequestSenderFactory.createFromClass(requestSenderClassName);
-        } catch (CreatedFailException e) {
-            throw new InitFailException(e.getMessage());
-        }
+        RequestSender requestSender = RequestSenderFactory.createFromClass(requestSenderClassName);
         this.requestQueue = new RequestQueue<>(1000);
         this.requestHandlerThread = new RequestHandlerThread(
             this.requestQueue, requestSender, registryManager, protocolInterface);

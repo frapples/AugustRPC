@@ -1,6 +1,6 @@
 package io.github.frapples.augustrpc.simple.service;
 
-import io.github.frapples.augustrpc.context.annotation.AugustRpcService;
+import io.github.frapples.augustrpc.service.annotation.AugustRpcService;
 
 /**
  * @author Frapples <isfrapples@outlook.com>

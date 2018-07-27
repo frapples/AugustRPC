@@ -1,6 +1,6 @@
-package io.github.frapples.augustrpc.context.consumer;
+package io.github.frapples.augustrpc.service.consumer;
 
-import io.github.frapples.augustrpc.context.RpcContext;
+import io.github.frapples.augustrpc.service.RpcContext;
 import io.github.frapples.augustrpc.transport.consumer.ConsumerTransportContext;
 import io.github.frapples.augustrpc.transport.model.Request;
 import io.github.frapples.augustrpc.transport.model.Response;

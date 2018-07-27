@@ -1,13 +1,12 @@
-package io.github.frapples.augustrpc.context;
+package io.github.frapples.augustrpc.service;
 
-import io.github.frapples.augustrpc.context.annotation.AugustRpcService;
-import io.github.frapples.augustrpc.context.consumer.ConsumerRpcContext;
-import io.github.frapples.augustrpc.context.exception.InitFailException;
-import io.github.frapples.augustrpc.context.provider.ProviderRpcContext;
-import io.github.frapples.augustrpc.iocbridge.CreatedFailException;
-import io.github.frapples.augustrpc.iocbridge.IocBridge;
-import io.github.frapples.augustrpc.iocbridge.IocBridgeFactory;
-import io.github.frapples.augustrpc.protocol.JsonProtocol;
+import io.github.frapples.augustrpc.service.consumer.ConsumerRpcContext;
+import io.github.frapples.augustrpc.service.exception.InitFailException;
+import io.github.frapples.augustrpc.service.provider.ProviderRpcContext;
+import io.github.frapples.augustrpc.exception.CreatedFailException;
+import io.github.frapples.augustrpc.service.iocbridge.IocBridge;
+import io.github.frapples.augustrpc.service.iocbridge.IocBridgeFactory;
+import io.github.frapples.augustrpc.protocol.JsonProtocolImpl;
 import io.github.frapples.augustrpc.protocol.ProtocolInterface;
 import io.github.frapples.augustrpc.registry.RegistryManager;
 import io.github.frapples.augustrpc.transport.consumer.ConsumerTransportContext;
@@ -55,36 +54,38 @@ public class RpcContext {
         log.info("Initializing RegistryManager");
         this.registryManager = new RegistryManager();
         log.info("Initializing ProtocolInterface");
-        this.protocolInterface = new JsonProtocol();
+        this.protocolInterface = new JsonProtocolImpl();
 
-        log.info("Initializing provider side...", config);
-        initProvider();
-        log.info("Initializing consumer side...", config);
-        initConsumer();
+        try {
+            log.info("Initializing provider side...", config);
+            initProvider();
+            log.info("Initializing consumer side...", config);
+            initConsumer();
+        } catch (CreatedFailException originException) {
+            InitFailException e = new InitFailException();
+            e.addSuppressed(originException);
+            throw e;
+        }
     }
 
 
-    private void initProvider() throws InitFailException {
+    private void initProvider() throws InitFailException, CreatedFailException {
         if (this.providerRpcContext != null) {
             return;
         }
 
         log.info("Initializing IocBridge");
-        try {
-            this.iocBridge = IocBridgeFactory.createFromClass(this.config.getIocBridgeImplClassName());
-        } catch (CreatedFailException e) {
-            throw new InitFailException(e.getMessage());
-        }
+        this.iocBridge = IocBridgeFactory.createFromClass(this.config.getIocBridgeImplClassName());
 
         log.info("Initializing ProviderRpcContext");
         this.providerRpcContext = new ProviderRpcContext(this.iocBridge);
         log.info("Initializing ProviderTransportContext");
         this.providerTransportContext = new ProviderTransportContext(
-            this.registryManager, this.iocBridge, this.protocolInterface, this.config.getNetworkListenerImplClassName());
+            this.registryManager, this.providerRpcContext, this.protocolInterface, this.config.getNetworkListenerImplClassName());
         this.providerTransportContext.init();
     }
 
-    private void initConsumer() throws InitFailException {
+    private void initConsumer() throws CreatedFailException {
         if (this.consumerRpcContext != null) {
             return;
         }
@@ -104,12 +105,12 @@ public class RpcContext {
     }
 
 
-    public ProviderRpcContext getProviderRpcContext() {
-        return providerRpcContext;
-    }
-
     public ConsumerRpcContext getConsumerRpcContext() {
         return consumerRpcContext;
+    }
+
+    public Config getConfig() {
+        return config;
     }
 
 }

@@ -1,6 +1,6 @@
 package io.github.frapples.augustrpc.transport.provider.invoker;
 
-import io.github.frapples.augustrpc.iocbridge.IocBridge;
+import io.github.frapples.augustrpc.service.provider.ProviderRpcContext;
 import io.github.frapples.augustrpc.transport.model.Request;
 import io.github.frapples.augustrpc.transport.model.Response;
 import io.github.frapples.augustrpc.transport.provider.exception.ReceiverFailException;
@@ -13,10 +13,10 @@ import java.lang.reflect.Method;
  */
 public class ServiceInvoker {
 
-    private final IocBridge iocBridge;
+    private final ProviderRpcContext providerRpcContext;
 
-    public ServiceInvoker(IocBridge iocBridge) {
-        this.iocBridge = iocBridge;
+    public ServiceInvoker(ProviderRpcContext providerRpcContext) {
+        this.providerRpcContext = providerRpcContext;
     }
 
     public Response invoke(Request request) throws ReceiverFailException {
@@ -31,7 +31,7 @@ public class ServiceInvoker {
                 types[i] = Class.forName(typeNames[i]);
             }
 
-            Object service = iocBridge.getBean(clazz);
+            Object service = this.providerRpcContext.getService(clazz);
             Method method = service.getClass().getMethod(request.getMethodName(), types);
             result = method.invoke(service, request.getArguments());
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {

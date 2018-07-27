@@ -1,8 +1,8 @@
 package io.github.frapples.augustrpc.simple;
 
-import io.github.frapples.augustrpc.context.Config;
-import io.github.frapples.augustrpc.context.RpcContext;
-import io.github.frapples.augustrpc.context.exception.InitFailException;
+import io.github.frapples.augustrpc.service.Config;
+import io.github.frapples.augustrpc.service.RpcContext;
+import io.github.frapples.augustrpc.service.exception.InitFailException;
 import io.github.frapples.augustrpc.simple.service.SimpleService;
 
 /**
