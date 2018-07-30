@@ -1,6 +1,6 @@
 package io.github.frapples.augustrpc.filter.impl;
 
-import io.github.frapples.augustrpc.filter.Filter;
+import io.github.frapples.augustrpc.filter.BaseFilter;
 import io.github.frapples.augustrpc.transport.consumer.exception.RequestFailException;
 import io.github.frapples.augustrpc.transport.model.CallId;
 import io.github.frapples.augustrpc.transport.model.Request;
@@ -12,11 +12,11 @@ import org.slf4j.LoggerFactory;
  * @author Frapples <isfrapples@outlook.com>
  * @date 2018/7/30
  */
-public class TimeLogFilterImpl extends Filter {
+public class TimeLogFilterImpl extends BaseFilter {
 
     private final static Logger log = LoggerFactory.getLogger(TimeLogFilterImpl.class);
 
-    public TimeLogFilterImpl(Filter next) {
+    public TimeLogFilterImpl(BaseFilter next) {
         super(next);
     }
 

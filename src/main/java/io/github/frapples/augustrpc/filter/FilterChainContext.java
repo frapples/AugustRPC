@@ -13,7 +13,7 @@ import io.github.frapples.augustrpc.transport.model.Response;
  */
 public class FilterChainContext {
 
-    private final Filter filterChain;
+    private final BaseFilter filterChain;
 
     public FilterChainContext(String[] customFilters) {
         filterChain = new TimeLogFilterImpl(

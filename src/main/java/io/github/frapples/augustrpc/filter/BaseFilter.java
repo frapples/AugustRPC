@@ -8,20 +8,20 @@ import io.github.frapples.augustrpc.transport.model.Response;
  * @author Frapples <isfrapples@outlook.com>
  * @date 2018/7/30
  */
-public abstract class Filter {
+public abstract class BaseFilter {
 
-    private final Filter next;
+    private final BaseFilter next;
 
-    protected Filter() {
+    protected BaseFilter() {
         this.next = null;
         throw new UnsupportedOperationException();
     }
 
-    public Filter(Filter next) {
+    public BaseFilter(BaseFilter next) {
         this.next = next;
     }
 
-    protected Filter getNext() {
+    protected BaseFilter getNext() {
         return next;
     }
 
