@@ -1,5 +1,6 @@
 package io.github.frapples.augustrpc.service.consumer;
 
+import io.github.frapples.augustrpc.filter.FilterChainContext;
 import io.github.frapples.augustrpc.service.annotation.AugustRpcService;
 import java.lang.reflect.Proxy;
 import net.jcip.annotations.ThreadSafe;
@@ -15,7 +16,10 @@ public class ConsumerRpcContext {
 
     private final Logger log = LoggerFactory.getLogger(ConsumerRpcContext.class);
 
-    public ConsumerRpcContext() {
+    private final FilterChainContext filterChainContext;
+
+    public ConsumerRpcContext(FilterChainContext filterChainContext) {
+        this.filterChainContext = filterChainContext;
     }
 
     public <T> T getService(Class<T> clazz) {
@@ -30,7 +34,7 @@ public class ConsumerRpcContext {
         Object object = Proxy.newProxyInstance(
             clazz.getClassLoader(),
             new Class[]{clazz},
-            new RpcServiceDynamicProxyHandler<>(clazz));
+            new RpcServiceDynamicProxyHandler<>(filterChainContext, clazz));
         return (T) object;
     }
 }

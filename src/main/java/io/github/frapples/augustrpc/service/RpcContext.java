@@ -1,5 +1,6 @@
 package io.github.frapples.augustrpc.service;
 
+import io.github.frapples.augustrpc.filter.FilterChainContext;
 import io.github.frapples.augustrpc.service.consumer.ConsumerRpcContext;
 import io.github.frapples.augustrpc.service.exception.InitFailException;
 import io.github.frapples.augustrpc.service.provider.ProviderRpcContext;
@@ -28,6 +29,8 @@ public class RpcContext {
 
     private volatile ProviderRpcContext providerRpcContext;
     private volatile ConsumerRpcContext consumerRpcContext;
+
+    private volatile FilterChainContext filterChainContext;
 
     private volatile ConsumerTransportContext consumerTransportContext;
     private volatile ProtocolInterface protocolInterface;
@@ -90,8 +93,10 @@ public class RpcContext {
             return;
         }
 
+        log.info("Initializing FilterChainContext");
+        this.filterChainContext = new FilterChainContext(new String[]{});
         log.info("Initializing ConsumerRpcContext");
-        this.consumerRpcContext = new ConsumerRpcContext();
+        this.consumerRpcContext = new ConsumerRpcContext(this.filterChainContext);
         log.info("Initializing ConsumerTransportContext");
         this.consumerTransportContext = new ConsumerTransportContext(
             config.getRequestSenderImplClassName(),

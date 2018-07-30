@@ -1,7 +1,6 @@
 package io.github.frapples.augustrpc.service.consumer;
 
-import io.github.frapples.augustrpc.service.RpcContext;
-import io.github.frapples.augustrpc.transport.consumer.ConsumerTransportContext;
+import io.github.frapples.augustrpc.filter.FilterChainContext;
 import io.github.frapples.augustrpc.transport.model.CallId;
 import io.github.frapples.augustrpc.transport.model.Request;
 import io.github.frapples.augustrpc.transport.model.Response;
@@ -18,9 +17,12 @@ public class RpcServiceDynamicProxyHandler<T> implements InvocationHandler {
 
     private final static Logger log = LoggerFactory.getLogger(RpcServiceDynamicProxyHandler.class);
 
+    private final FilterChainContext filterChainContext;
+
     private final Class<T> clazz;
 
-    RpcServiceDynamicProxyHandler(Class<T> clazz) {
+    RpcServiceDynamicProxyHandler(FilterChainContext filterChainContext, Class<T> clazz) {
+        this.filterChainContext = filterChainContext;
         this.clazz = clazz;
     }
 
@@ -31,9 +33,7 @@ public class RpcServiceDynamicProxyHandler<T> implements InvocationHandler {
         args = args == null ? new Object[0] : args;
         CallId callId = CallId.of(clazz, method);
         Request request = new Request(callId, args);
-        ConsumerTransportContext consumerTransportContext = RpcContext.getInstance()
-            .getConsumerTransportContext();
-        Response response = consumerTransportContext.sendCallMessage(request);
+        Response response = this.filterChainContext.sendRequest(request);
         return response.getReturnResult();
     }
 }
