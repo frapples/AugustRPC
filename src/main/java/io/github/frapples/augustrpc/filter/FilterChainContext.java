@@ -2,6 +2,7 @@ package io.github.frapples.augustrpc.filter;
 
 
 import io.github.frapples.augustrpc.filter.impl.SendedFilterImpl;
+import io.github.frapples.augustrpc.filter.impl.TimeLogFilterImpl;
 import io.github.frapples.augustrpc.transport.consumer.exception.RequestFailException;
 import io.github.frapples.augustrpc.transport.model.Request;
 import io.github.frapples.augustrpc.transport.model.Response;
@@ -15,7 +16,8 @@ public class FilterChainContext {
     private final Filter filterChain;
 
     public FilterChainContext(String[] customFilters) {
-        filterChain = new SendedFilterImpl(null);
+        filterChain = new TimeLogFilterImpl(
+            new SendedFilterImpl(null));
     }
 
     public Response sendRequest(Request request) throws RequestFailException {
