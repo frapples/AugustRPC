@@ -2,6 +2,7 @@ package io.github.frapples.augustrpc.utils;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Arrays;
 
 /**
  * @author Frapples <isfrapples@outlook.com>
@@ -15,6 +16,7 @@ public class ByteOrderUtils {
     }
 
     public static int bytesToIntWithBigEndian(byte[] bytes) {
+        bytes = Arrays.copyOfRange(bytes, 0, Integer.BYTES);
         return ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN).getInt();
     }
 
