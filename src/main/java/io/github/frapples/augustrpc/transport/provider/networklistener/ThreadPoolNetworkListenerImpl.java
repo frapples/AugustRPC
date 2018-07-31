@@ -52,7 +52,7 @@ public class ThreadPoolNetworkListenerImpl implements NetworkListener {
 
         return new ThreadPoolExecutor(minSize, maxSize,
             keepAliveSecond, TimeUnit.SECONDS,
-            new LinkedBlockingDeque<>(), threadFactory);
+            new LinkedBlockingDeque<>(1), threadFactory);
     }
 
     @Override

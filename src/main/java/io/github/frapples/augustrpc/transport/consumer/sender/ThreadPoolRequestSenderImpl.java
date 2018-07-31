@@ -34,11 +34,12 @@ public class ThreadPoolRequestSenderImpl implements RequestSender {
 
         this.executorService = new ThreadPoolExecutor(minSize, maxSize,
             keepAliveSecond, TimeUnit.SECONDS,
-            new LinkedBlockingDeque<>(), threadFactory);
+            new LinkedBlockingDeque<>(1), threadFactory);
     }
 
     @Override
     public void send(ProviderIdentifier providerIdentifier, byte[] data, BiConsumer<byte[], Throwable> onComplete) {
+        System.out.println(this.executorService.toString());
         executorService.submit(() -> {
             this.sendData(providerIdentifier, data, onComplete);
         });
