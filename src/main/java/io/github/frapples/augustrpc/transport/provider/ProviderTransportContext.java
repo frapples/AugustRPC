@@ -31,9 +31,8 @@ public class ProviderTransportContext {
         this.protocolInterface = protocolInterface;
         this.providerRpcContext = providerRpcContext;
         this.serviceInvoker = new ServiceInvoker(providerRpcContext);
-        int port = (new Random()).nextInt(10000) + 10000;
         this.networkListener = NetworkListenerFactory.createFromClass(networkListenerClassName);
-        this.providerIdentifier = new ProviderIdentifier("127.0.0.1", port);
+        this.providerIdentifier = generateProviderIdentifier();
         this.requestHandlerThread = new ListeningThread(this.providerIdentifier, this.networkListener);
     }
 
@@ -46,5 +45,10 @@ public class ProviderTransportContext {
         }
 
         this.requestHandlerThread.start();
+    }
+
+    private ProviderIdentifier generateProviderIdentifier() {
+        int port = (new Random()).nextInt(10000) + 10000;
+        return new ProviderIdentifier("127.0.0.1", port);
     }
 }

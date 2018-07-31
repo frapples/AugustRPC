@@ -1,4 +1,4 @@
-package io.github.frapples.augustrpc.simple.service;
+package io.github.frapples.augustrpc.simpleexample.rpcinterface;
 
 import io.github.frapples.augustrpc.service.annotation.AugustRpcService;
 
@@ -7,7 +7,7 @@ import io.github.frapples.augustrpc.service.annotation.AugustRpcService;
  * @date 2018/7/25
  */
 @AugustRpcService
-public interface SimpleService {
+public interface ProviderDemoService {
 
     Integer add(Integer a, Integer b);
 

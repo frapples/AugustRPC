@@ -1,8 +1,8 @@
-package io.github.frapples.augustrpc.simple;
+package io.github.frapples.augustrpc.simpleexample.config;
 
 import io.github.frapples.augustrpc.service.iocbridge.IocBridge;
-import io.github.frapples.augustrpc.simple.service.SimpleService;
-import io.github.frapples.augustrpc.simple.service.SimpleServiceImpl;
+import io.github.frapples.augustrpc.simpleexample.rpcinterface.ProviderDemoService;
+import io.github.frapples.augustrpc.simpleexample.provider.ProviderDemoServiceImpl;
 
 /**
  * @author Frapples <isfrapples@outlook.com>
@@ -12,8 +12,8 @@ public class SimpleIocBridge implements IocBridge {
 
     @Override
     public <T> T getBean(Class<T> clazz) {
-        if (clazz == SimpleService.class) {
-            return (T) new SimpleServiceImpl();
+        if (clazz == ProviderDemoService.class) {
+            return (T) new ProviderDemoServiceImpl();
         }
         return null;
     }
@@ -25,7 +25,7 @@ public class SimpleIocBridge implements IocBridge {
 
     @Override
     public Class<?>[] getAllBeanTypesWithAugustRpcService() {
-        return new Class<?>[]{ SimpleService.class};
+        return new Class<?>[]{ ProviderDemoService.class};
     }
 
 }
