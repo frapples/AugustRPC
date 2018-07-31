@@ -22,4 +22,28 @@ public class ConsumerDemoService {
         result = providerDemoService.sub(1, 2);
         System.out.println(result);
     }
+
+    public void threadDemo() {
+        int n = 100;
+
+        Thread[] threads = new Thread[n];
+        for (int i = 0; i < n; i++) {
+            int finalI = i;
+            threads[i] = new Thread(() -> {
+                int result = this.providerDemoService.add(finalI, 0);
+                System.out.println(result);
+            });
+        }
+
+        for (int i = 0; i < n; i++) {
+            threads[i].start();
+        }
+        for (int i = 0; i < n; i++) {
+            try {
+                threads[i].join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

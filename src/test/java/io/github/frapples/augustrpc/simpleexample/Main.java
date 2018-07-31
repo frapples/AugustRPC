@@ -14,12 +14,15 @@ public class Main {
     public static void main(String[] args) throws InitFailException {
         Config config = Config.builder()
             .iocBridgeImplClassName("io.github.frapples.augustrpc.simpleexample.config.SimpleIocBridge")
-            .requestSenderImplClassName("io.github.frapples.augustrpc.transport.consumer.sender.SimpleRequestSenderImpl")
-            .networkListenerImplClassName("io.github.frapples.augustrpc.transport.provider.networklistener.SimpleNetworkListenerImpl")
+            //.requestSenderImplClassName("io.github.frapples.augustrpc.transport.consumer.sender.SimpleRequestSenderImpl")
+            //.networkListenerImplClassName("io.github.frapples.augustrpc.transport.provider.networklistener.SimpleNetworkListenerImpl")
+            .requestSenderImplClassName("io.github.frapples.augustrpc.transport.consumer.sender.ThreadPoolRequestSenderImpl")
+            .networkListenerImplClassName("io.github.frapples.augustrpc.transport.provider.networklistener.ThreadPoolNetworkListenerImpl")
             .build();
         RpcContext.init(config);
 
         ConsumerDemoService consumerDemoService = new ConsumerDemoService();
         consumerDemoService.demo();
+        consumerDemoService.threadDemo();
     }
 }

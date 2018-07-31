@@ -12,6 +12,11 @@ public class ProviderDemoServiceImpl implements ProviderDemoService {
 
     @Override
     public Integer add(Integer a, Integer b) {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return a + b;
     }
 
