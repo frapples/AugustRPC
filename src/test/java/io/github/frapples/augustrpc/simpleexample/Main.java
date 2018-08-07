@@ -4,6 +4,8 @@ import io.github.frapples.augustrpc.service.Config;
 import io.github.frapples.augustrpc.service.RpcContext;
 import io.github.frapples.augustrpc.service.exception.InitFailException;
 import io.github.frapples.augustrpc.simpleexample.cosumer.ConsumerDemoService;
+import io.github.frapples.augustrpc.utils.FileUtils;
+import java.io.IOException;
 
 /**
  * @author Frapples <isfrapples@outlook.com>
@@ -11,14 +13,8 @@ import io.github.frapples.augustrpc.simpleexample.cosumer.ConsumerDemoService;
  */
 public class Main {
 
-    public static void main(String[] args) throws InitFailException {
-        Config config = Config.builder()
-            .iocBridgeImplClassName("io.github.frapples.augustrpc.simpleexample.config.SimpleIocBridge")
-            //.requestSenderImplClassName("io.github.frapples.augustrpc.transport.consumer.sender.SimpleRequestSenderImpl")
-            //.networkListenerImplClassName("io.github.frapples.augustrpc.transport.provider.networklistener.SimpleNetworkListenerImpl")
-            .requestSenderImplClassName("io.github.frapples.augustrpc.transport.consumer.sender.ThreadPoolRequestSenderImpl")
-            .networkListenerImplClassName("io.github.frapples.augustrpc.transport.provider.networklistener.ThreadPoolNetworkListenerImpl")
-            .build();
+    public static void main(String[] args) throws InitFailException, IOException {
+        Config config = Config.of(FileUtils.getResource("simpleexample.config.json"));
         RpcContext.init(config);
 
         ConsumerDemoService consumerDemoService = new ConsumerDemoService();

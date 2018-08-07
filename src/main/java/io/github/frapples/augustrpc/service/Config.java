@@ -1,5 +1,10 @@
 package io.github.frapples.augustrpc.service;
 
+import com.google.gson.Gson;
+import io.github.frapples.augustrpc.utils.FileUtils;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import net.jcip.annotations.Immutable;
 
 /**
@@ -17,6 +22,16 @@ public class Config {
         this.iocBridgeImplClassName = iocBridgeImplClassName;
         this.requestSenderImplClassName = requestSenderImplClassName;
         this.networkListenerImplClassName = networkListenerImplClassName;
+    }
+
+    public static Config of(String confilgFileContext) {
+        Gson gson = new Gson();
+        return gson.fromJson(confilgFileContext, Config.class);
+    }
+
+    public static Config of(URL configResource) throws IOException {
+        String context = FileUtils.readFromStream(configResource.openStream(), StandardCharsets.UTF_8);
+        return Config.of(context);
     }
 
     public String getIocBridgeImplClassName() {
