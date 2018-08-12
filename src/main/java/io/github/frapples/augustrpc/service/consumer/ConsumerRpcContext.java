@@ -1,7 +1,7 @@
 package io.github.frapples.augustrpc.service.consumer;
 
 import io.github.frapples.augustrpc.filter.FilterChainContext;
-import io.github.frapples.augustrpc.service.annotation.AugustRpcService;
+import io.github.frapples.augustrpc.ref.annotation.AugustRpcService;
 import java.lang.reflect.Proxy;
 import net.jcip.annotations.ThreadSafe;
 import org.slf4j.Logger;

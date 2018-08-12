@@ -14,7 +14,7 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) throws InitFailException, IOException {
-        Config config = Config.of(FileUtils.getResource("simpleexample.config.json"));
+        Config config = Config.ofResourcePath("simpleexample.config.json");
         RpcContext.init(config);
 
         ConsumerDemoService consumerDemoService = new ConsumerDemoService();

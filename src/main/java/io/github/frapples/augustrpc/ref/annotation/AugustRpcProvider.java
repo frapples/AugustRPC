@@ -1,4 +1,4 @@
-package io.github.frapples.augustrpc.service.annotation;
+package io.github.frapples.augustrpc.ref.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

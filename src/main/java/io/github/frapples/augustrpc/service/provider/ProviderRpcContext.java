@@ -1,7 +1,7 @@
 package io.github.frapples.augustrpc.service.provider;
 
-import io.github.frapples.augustrpc.service.annotation.AugustRpcProvider;
-import io.github.frapples.augustrpc.service.annotation.AugustRpcService;
+import io.github.frapples.augustrpc.ref.annotation.AugustRpcProvider;
+import io.github.frapples.augustrpc.ref.annotation.AugustRpcService;
 import io.github.frapples.augustrpc.service.exception.RpcServiceTypeErrorException;
 import io.github.frapples.augustrpc.service.iocbridge.IocBridge;
 import java.util.Map;

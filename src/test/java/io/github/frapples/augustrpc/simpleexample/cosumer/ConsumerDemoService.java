@@ -1,6 +1,6 @@
 package io.github.frapples.augustrpc.simpleexample.cosumer;
 
-import io.github.frapples.augustrpc.service.RpcContext;
+import io.github.frapples.augustrpc.ref.AuguestRpcFacade;
 import io.github.frapples.augustrpc.simpleexample.rpcinterface.ProviderDemoService;
 
 /**
@@ -12,7 +12,7 @@ public class ConsumerDemoService {
     private final ProviderDemoService providerDemoService;
 
     public ConsumerDemoService() {
-        this.providerDemoService = RpcContext.getInstance().getConsumerRpcContext().getService(ProviderDemoService.class);
+        this.providerDemoService = AuguestRpcFacade.refer(ProviderDemoService.class);
     }
 
     public void demo() {

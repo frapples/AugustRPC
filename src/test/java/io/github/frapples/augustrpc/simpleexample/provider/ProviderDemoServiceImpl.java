@@ -1,6 +1,6 @@
 package io.github.frapples.augustrpc.simpleexample.provider;
 
-import io.github.frapples.augustrpc.service.annotation.AugustRpcProvider;
+import io.github.frapples.augustrpc.ref.annotation.AugustRpcProvider;
 import io.github.frapples.augustrpc.simpleexample.rpcinterface.ProviderDemoService;
 
 /**

@@ -34,6 +34,10 @@ public class Config {
         return Config.of(context);
     }
 
+    public static Config ofResourcePath(String path) throws IOException {
+        return Config.of(FileUtils.getResource(path));
+    }
+
     public String getIocBridgeImplClassName() {
         return iocBridgeImplClassName;
     }
