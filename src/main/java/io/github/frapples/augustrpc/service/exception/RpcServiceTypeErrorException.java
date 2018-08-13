@@ -1,6 +1,6 @@
 package io.github.frapples.augustrpc.service.exception;
 
-import io.github.frapples.augustrpc.exception.AugustRpcRuntimeException;
+import io.github.frapples.augustrpc.ref.exception.AugustRpcRuntimeException;
 
 /**
  * @author Frapples <isfrapples@outlook.com>

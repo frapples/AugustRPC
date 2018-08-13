@@ -2,9 +2,8 @@ package io.github.frapples.augustrpc.simpleexample;
 
 import io.github.frapples.augustrpc.service.Config;
 import io.github.frapples.augustrpc.service.RpcContext;
-import io.github.frapples.augustrpc.service.exception.InitFailException;
+import io.github.frapples.augustrpc.service.exception.AugustRpcInitFailException;
 import io.github.frapples.augustrpc.simpleexample.cosumer.ConsumerDemoService;
-import io.github.frapples.augustrpc.utils.FileUtils;
 import java.io.IOException;
 
 /**
@@ -13,7 +12,7 @@ import java.io.IOException;
  */
 public class Main {
 
-    public static void main(String[] args) throws InitFailException, IOException {
+    public static void main(String[] args) throws AugustRpcInitFailException, IOException {
         Config config = Config.ofResourcePath("simpleexample.config.json");
         RpcContext.init(config);
 

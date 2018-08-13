@@ -1,5 +1,6 @@
 package io.github.frapples.augustrpc.utils;
 
+import io.github.frapples.augustrpc.utils.exception.CreatedFailException;
 import java.util.HashMap;
 import net.jcip.annotations.ThreadSafe;
 
@@ -31,5 +32,32 @@ public class ReflectionUtils {
         } else {
             return Class.forName(fullyQualifiedName);
         }
+    }
+
+    public static <T> T createFromClassName(String fullyQualifiedName,Class<T> superClass) throws CreatedFailException {
+        if (StringUtils.isEmpty(fullyQualifiedName)) {
+            throw new IllegalArgumentException("Class name is empty: " + fullyQualifiedName);
+        }
+
+        Class<?> clazz;
+        try {
+            clazz = Class.forName(fullyQualifiedName);
+        } catch (ClassNotFoundException e) {
+            throw new CreatedFailException("Class not found: " + fullyQualifiedName);
+        }
+
+        if (!superClass.isAssignableFrom(clazz)) {
+            throw new CreatedFailException(
+                String.format("Class %s is not %s", superClass.getName(), fullyQualifiedName));
+        }
+
+        T instance;
+        try {
+            instance = (T) clazz.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new CreatedFailException(
+                String.format("Create instance of class %s fail", fullyQualifiedName), e);
+        }
+        return instance;
     }
 }

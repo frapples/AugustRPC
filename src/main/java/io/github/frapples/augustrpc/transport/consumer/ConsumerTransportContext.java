@@ -1,6 +1,6 @@
 package io.github.frapples.augustrpc.transport.consumer;
 
-import io.github.frapples.augustrpc.exception.CreatedFailException;
+import io.github.frapples.augustrpc.utils.exception.CreatedFailException;
 import io.github.frapples.augustrpc.protocol.ProtocolInterface;
 import io.github.frapples.augustrpc.registry.RegistryManager;
 import io.github.frapples.augustrpc.transport.consumer.exception.RequestFailException;

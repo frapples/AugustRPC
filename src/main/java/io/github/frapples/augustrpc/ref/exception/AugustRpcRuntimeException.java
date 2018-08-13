@@ -1,4 +1,4 @@
-package io.github.frapples.augustrpc.exception;
+package io.github.frapples.augustrpc.ref.exception;
 
 /**
  * @author Frapples <isfrapples@outlook.com>

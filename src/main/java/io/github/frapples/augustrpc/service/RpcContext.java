@@ -2,9 +2,9 @@ package io.github.frapples.augustrpc.service;
 
 import io.github.frapples.augustrpc.filter.FilterChainContext;
 import io.github.frapples.augustrpc.service.consumer.ConsumerRpcContext;
-import io.github.frapples.augustrpc.service.exception.InitFailException;
+import io.github.frapples.augustrpc.service.exception.AugustRpcInitFailException;
 import io.github.frapples.augustrpc.service.provider.ProviderRpcContext;
-import io.github.frapples.augustrpc.exception.CreatedFailException;
+import io.github.frapples.augustrpc.utils.exception.CreatedFailException;
 import io.github.frapples.augustrpc.service.iocbridge.IocBridge;
 import io.github.frapples.augustrpc.service.iocbridge.IocBridgeFactory;
 import io.github.frapples.augustrpc.protocol.JsonProtocolImpl;
@@ -41,7 +41,7 @@ public class RpcContext {
 
     private final Config config;
 
-    public static synchronized void init(Config config) throws InitFailException {
+    public static synchronized void init(Config config) throws AugustRpcInitFailException {
         if (instance == null) {
             RpcContext.instance = new RpcContext(config);
         }
@@ -51,7 +51,7 @@ public class RpcContext {
         return instance;
     }
 
-    private RpcContext(Config config) throws InitFailException {
+    private RpcContext(Config config) throws AugustRpcInitFailException {
         log.info("Initializing August RPC with config {}...", config);
         this.config = config;
         log.info("Initializing RegistryManager");
@@ -64,15 +64,13 @@ public class RpcContext {
             initProvider();
             log.info("Initializing consumer side...", config);
             initConsumer();
-        } catch (CreatedFailException originException) {
-            InitFailException e = new InitFailException();
-            e.addSuppressed(originException);
-            throw e;
+        } catch (CreatedFailException e) {
+            throw new AugustRpcInitFailException(e);
         }
     }
 
 
-    private void initProvider() throws InitFailException, CreatedFailException {
+    private void initProvider() throws AugustRpcInitFailException, CreatedFailException {
         if (this.providerRpcContext != null) {
             return;
         }

@@ -25,7 +25,7 @@ public class ThreadPoolRequestSenderImpl implements RequestSender {
 
     private final ExecutorService executorService;
 
-    ThreadPoolRequestSenderImpl() {
+    public ThreadPoolRequestSenderImpl() {
         int minSize = 1;
         int maxSize = 100;
         int keepAliveSecond = 60;

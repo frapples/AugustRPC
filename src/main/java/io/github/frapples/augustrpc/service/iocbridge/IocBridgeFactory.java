@@ -1,7 +1,7 @@
 package io.github.frapples.augustrpc.service.iocbridge;
 
-import io.github.frapples.augustrpc.exception.CreatedFailException;
-import io.github.frapples.augustrpc.utils.StringUtils;
+import io.github.frapples.augustrpc.utils.ReflectionUtils;
+import io.github.frapples.augustrpc.utils.exception.CreatedFailException;
 
 /**
  * @author Frapples <isfrapples@outlook.com>
@@ -10,29 +10,7 @@ import io.github.frapples.augustrpc.utils.StringUtils;
 public class IocBridgeFactory {
 
     public static IocBridge createFromClass(String fullyQualifiedName) throws CreatedFailException {
-        if (StringUtils.isEmpty(fullyQualifiedName)) {
-            throw new IllegalArgumentException("IocBridge impl class name is empty");
-        }
-
-        Class<?> clazz;
-        try {
-            clazz = Class.forName(fullyQualifiedName);
-        } catch (ClassNotFoundException e) {
-            throw new CreatedFailException("IocBridge impl class not found: " + fullyQualifiedName);
-        }
-
-        if (!IocBridge.class.isAssignableFrom(clazz)) {
-            throw new CreatedFailException(String.format("IocBridge impl class %s is not IocBridge", fullyQualifiedName));
-        }
-
-        IocBridge iocBridge;
-        try {
-            iocBridge = (IocBridge) clazz.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new CreatedFailException(
-                String.format("Create instance of IocBridge impl class %s fail, reason: %s", fullyQualifiedName, e));
-        }
-        return iocBridge;
+        return ReflectionUtils.createFromClassName(fullyQualifiedName, IocBridge.class);
     }
 
 }
