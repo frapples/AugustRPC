@@ -43,7 +43,7 @@ public class ReflectionUtils {
         try {
             clazz = Class.forName(fullyQualifiedName);
         } catch (ClassNotFoundException e) {
-            throw new CreatedFailException("Class not found: " + fullyQualifiedName);
+            throw new CreatedFailException("Class not found: " + fullyQualifiedName, e);
         }
 
         if (!superClass.isAssignableFrom(clazz)) {

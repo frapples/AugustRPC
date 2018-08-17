@@ -1,13 +1,13 @@
 package io.github.frapples.augustrpc.transport.provider;
 
-import io.github.frapples.augustrpc.utils.exception.CreatedFailException;
+import io.github.frapples.augustrpc.plugin.PluginManager;
+import io.github.frapples.augustrpc.plugin.exception.PluginLoadedFailException;
 import io.github.frapples.augustrpc.protocol.ProtocolInterface;
 import io.github.frapples.augustrpc.registry.RegistryManager;
 import io.github.frapples.augustrpc.service.provider.ProviderRpcContext;
 import io.github.frapples.augustrpc.transport.model.ProviderIdentifier;
 import io.github.frapples.augustrpc.transport.provider.invoker.ServiceInvoker;
 import io.github.frapples.augustrpc.transport.provider.networklistener.NetworkListener;
-import io.github.frapples.augustrpc.transport.provider.networklistener.NetworkListenerFactory;
 import java.util.Random;
 
 /**
@@ -25,13 +25,14 @@ public class ProviderTransportContext {
     private final ServiceInvoker serviceInvoker;
     private final ProviderIdentifier providerIdentifier;
 
-    public ProviderTransportContext(RegistryManager registryManager, ProviderRpcContext providerRpcContext, ProtocolInterface protocolInterface,
-        String networkListenerClassName) throws CreatedFailException {
+    public ProviderTransportContext(RegistryManager registryManager, PluginManager pluginManager,
+        ProviderRpcContext providerRpcContext, ProtocolInterface protocolInterface,
+        String networkListenerClassName) throws PluginLoadedFailException {
         this.registryManager = registryManager;
         this.protocolInterface = protocolInterface;
         this.providerRpcContext = providerRpcContext;
         this.serviceInvoker = new ServiceInvoker(providerRpcContext);
-        this.networkListener = NetworkListenerFactory.createFromClass(networkListenerClassName);
+        this.networkListener = pluginManager.getNetworkListener(networkListenerClassName);
         this.providerIdentifier = generateProviderIdentifier();
         this.requestHandlerThread = new ListeningThread(this.providerIdentifier, this.networkListener);
     }

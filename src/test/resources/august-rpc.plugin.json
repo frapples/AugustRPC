@@ -1,0 +1,10 @@
+{
+    "pluginName": "custom",
+    "items": {
+        "default": {
+            "iocBridge": {
+                "className": "io.github.frapples.augustrpc.simpleexample.config.SimpleIocBridge"
+            }
+        }
+    }
+}

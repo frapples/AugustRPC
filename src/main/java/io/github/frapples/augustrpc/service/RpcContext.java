@@ -1,17 +1,18 @@
 package io.github.frapples.augustrpc.service;
 
 import io.github.frapples.augustrpc.filter.FilterChainContext;
+import io.github.frapples.augustrpc.plugin.PluginManager;
+import io.github.frapples.augustrpc.plugin.exception.PluginLoadedFailException;
 import io.github.frapples.augustrpc.service.consumer.ConsumerRpcContext;
 import io.github.frapples.augustrpc.service.exception.AugustRpcInitFailException;
 import io.github.frapples.augustrpc.service.provider.ProviderRpcContext;
-import io.github.frapples.augustrpc.utils.exception.CreatedFailException;
 import io.github.frapples.augustrpc.service.iocbridge.IocBridge;
-import io.github.frapples.augustrpc.service.iocbridge.IocBridgeFactory;
 import io.github.frapples.augustrpc.protocol.JsonProtocolImpl;
 import io.github.frapples.augustrpc.protocol.ProtocolInterface;
 import io.github.frapples.augustrpc.registry.RegistryManager;
 import io.github.frapples.augustrpc.transport.consumer.ConsumerTransportContext;
 import io.github.frapples.augustrpc.transport.provider.ProviderTransportContext;
+import java.io.IOException;
 import net.jcip.annotations.ThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,7 @@ public class RpcContext {
 
     private volatile IocBridge iocBridge;
     private volatile RegistryManager registryManager;
+    private volatile PluginManager pluginManager;
 
     private final Config config;
 
@@ -60,46 +62,57 @@ public class RpcContext {
         this.protocolInterface = new JsonProtocolImpl();
 
         try {
+            initPluginManager();
             log.info("Initializing provider side...", config);
             initProvider();
             log.info("Initializing consumer side...", config);
             initConsumer();
-        } catch (CreatedFailException e) {
+        } catch (PluginLoadedFailException | IOException e) {
             throw new AugustRpcInitFailException(e);
         }
     }
 
+    private void initPluginManager() throws IOException {
+        this.pluginManager = new PluginManager();
+    }
 
-    private void initProvider() throws AugustRpcInitFailException, CreatedFailException {
+
+    private void initProvider() throws AugustRpcInitFailException {
         if (this.providerRpcContext != null) {
             return;
         }
 
-        log.info("Initializing IocBridge");
-        this.iocBridge = IocBridgeFactory.createFromClass(this.config.getIocBridgeImplClassName());
+        try {
+            log.info("Initializing IocBridge");
+            IocBridge iocBridge = this.pluginManager.getIocBridge(this.config.getIocBridge());
 
-        log.info("Initializing ProviderRpcContext");
-        this.providerRpcContext = new ProviderRpcContext(this.iocBridge);
-        log.info("Initializing ProviderTransportContext");
-        this.providerTransportContext = new ProviderTransportContext(
-            this.registryManager, this.providerRpcContext, this.protocolInterface, this.config.getNetworkListenerImplClassName());
-        this.providerTransportContext.init();
+            log.info("Initializing ProviderRpcContext");
+            this.providerRpcContext = new ProviderRpcContext(iocBridge);
+            log.info("Initializing ProviderTransportContext");
+            ProviderTransportContext providerTransportContext = new ProviderTransportContext(
+                this.registryManager, this.pluginManager,
+                this.providerRpcContext, this.protocolInterface, this.config.getNetworkListener());
+            providerTransportContext.init();
+        } catch (PluginLoadedFailException e) {
+            throw new AugustRpcInitFailException(e);
+        }
     }
 
-    private void initConsumer() throws CreatedFailException {
+    private void initConsumer() throws PluginLoadedFailException {
         if (this.consumerRpcContext != null) {
             return;
         }
 
         log.info("Initializing FilterChainContext");
-        this.filterChainContext = new FilterChainContext(new String[]{});
+        FilterChainContext filterChainContext = new FilterChainContext(new String[]{});
         log.info("Initializing ConsumerRpcContext");
-        this.consumerRpcContext = new ConsumerRpcContext(this.filterChainContext);
+        this.consumerRpcContext = new ConsumerRpcContext(filterChainContext);
         log.info("Initializing ConsumerTransportContext");
         this.consumerTransportContext = new ConsumerTransportContext(
-            config.getRequestSenderImplClassName(),
             this.registryManager,
-            this.protocolInterface);
+            this.pluginManager,
+            this.protocolInterface,
+            config.getRequestSender());
         this.consumerTransportContext.init();
     }
 
@@ -110,6 +123,10 @@ public class RpcContext {
 
     public ConsumerRpcContext getConsumerRpcContext() {
         return consumerRpcContext;
+    }
+
+    public PluginManager pluginManager() {
+        return pluginManager;
     }
 
     public Config getConfig() {

@@ -1,8 +1,5 @@
 {
-    "iocBridgeImplClassName":
-    "io.github.frapples.augustrpc.simpleexample.config.SimpleIocBridge",
-    "requestSenderImplClassName":
-    "io.github.frapples.augustrpc.transport.consumer.sender.ThreadPoolRequestSenderImpl",
-    "networkListenerImplClassName":
-    "io.github.frapples.augustrpc.transport.provider.networklistener.ThreadPoolNetworkListenerImpl"
+    "iocBridge": "custom",
+    "requestSender": "inner",
+    "networkListener": "inner"
 }

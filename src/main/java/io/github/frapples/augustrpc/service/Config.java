@@ -14,14 +14,14 @@ import net.jcip.annotations.Immutable;
 @Immutable
 public class Config {
 
-    private final String iocBridgeImplClassName;
-    private final String requestSenderImplClassName;
-    private final String networkListenerImplClassName;
+    private final String iocBridge;
+    private final String requestSender;
+    private final String networkListener;
 
-    public Config(String iocBridgeImplClassName, String requestSenderImplClassName, String networkListenerImplClassName) {
-        this.iocBridgeImplClassName = iocBridgeImplClassName;
-        this.requestSenderImplClassName = requestSenderImplClassName;
-        this.networkListenerImplClassName = networkListenerImplClassName;
+    public Config(String iocBridge, String requestSender, String networkListener) {
+        this.iocBridge = iocBridge;
+        this.requestSender = requestSender;
+        this.networkListener = networkListener;
     }
 
     public static Config of(String confilgFileContext) {
@@ -38,57 +38,23 @@ public class Config {
         return Config.of(FileUtils.getResource(path));
     }
 
-    public String getIocBridgeImplClassName() {
-        return iocBridgeImplClassName;
+    public String getIocBridge() {
+        return iocBridge;
     }
 
-    public String getRequestSenderImplClassName() {
-        return requestSenderImplClassName;
+    public String getRequestSender() {
+        return requestSender;
     }
 
-    public String getNetworkListenerImplClassName() {
-        return networkListenerImplClassName;
-    }
-
-    public static ConfigBuilder builder() {
-        return new ConfigBuilder();
+    public String getNetworkListener() {
+        return networkListener;
     }
 
     @Override
     public String toString() {
         return "Config{" +
-            "iocBridgeImplClassName='" + iocBridgeImplClassName + '\'' +
-            ", requestSenderImplClassName='" + requestSenderImplClassName + '\'' +
+            "iocBridge='" + iocBridge + '\'' +
+            ", requestSender='" + requestSender + '\'' +
             '}';
-    }
-
-
-    public static final class ConfigBuilder {
-
-        private String iocBridgeImplClassName;
-        private String requestSenderImplClassName;
-        private String networkListenerImplClassName;
-
-        private ConfigBuilder() {
-        }
-
-        public ConfigBuilder iocBridgeImplClassName(String iocBridgeImplClassName) {
-            this.iocBridgeImplClassName = iocBridgeImplClassName;
-            return this;
-        }
-
-        public ConfigBuilder requestSenderImplClassName(String requestSenderImplClassName) {
-            this.requestSenderImplClassName = requestSenderImplClassName;
-            return this;
-        }
-
-        public ConfigBuilder networkListenerImplClassName(String networkListenerImplClassName) {
-            this.networkListenerImplClassName = networkListenerImplClassName;
-            return this;
-        }
-
-        public Config build() {
-            return new Config(iocBridgeImplClassName, requestSenderImplClassName, networkListenerImplClassName);
-        }
     }
 }

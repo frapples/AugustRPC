@@ -1,0 +1,15 @@
+{
+    "pluginName": "inner",
+    "items": {
+        "default": {
+            "requestSender": {
+                "className": "io.github.frapples.augustrpc.transport.consumer.sender.ThreadPoolRequestSenderImpl"
+            },
+
+            "networkListener": {
+                "className": "io.github.frapples.augustrpc.transport.provider.networklistener.ThreadPoolNetworkListenerImpl"
+            }
+
+        }
+    }
+}
