@@ -24,6 +24,15 @@ public class ServiceInvoker {
     }
 
     public Response invoke(Request request) {
+        try {
+            Object returnResult = invokeMethod(request);
+            return new Response(returnResult);
+        } catch (Throwable e) {
+            return new Response(null, e);
+        }
+    }
+
+    private Object invokeMethod(Request request) throws Throwable {
         Object result;
         try {
             String className = request.getCallId().getServiceFullyQualifiedName();
@@ -38,11 +47,11 @@ public class ServiceInvoker {
             Object service = this.providerRpcContext.getService(clazz);
             Method method = service.getClass().getMethod(request.getCallId().getMethodName(), types);
             result = method.invoke(service, request.getArguments());
-        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+        } catch (InvocationTargetException e) {
+            throw e.getTargetException();
+        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException e) {
             throw new AugustRpcInvokedException(ErrorCode.INVOKE_FAIL, e);
         }
-
-        return new Response(result);
+        return result;
     }
-
 }
