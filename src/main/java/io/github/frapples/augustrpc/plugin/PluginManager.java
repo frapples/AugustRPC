@@ -18,11 +18,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import net.jcip.annotations.ThreadSafe;
 
 /**
  * @author Frapples <isfrapples@outlook.com>
  * @date 2018/8/15
  */
+@ThreadSafe
 public class PluginManager {
 
     private Map<String, PluginDeclarationVO> pluginsConfig = new ConcurrentHashMap<>();

@@ -1,7 +1,6 @@
 package io.github.frapples.augustrpc.filter.impl;
 
 import io.github.frapples.augustrpc.filter.BaseFilter;
-import io.github.frapples.augustrpc.transport.consumer.exception.RequestFailException;
 import io.github.frapples.augustrpc.transport.model.CallId;
 import io.github.frapples.augustrpc.transport.model.Request;
 import io.github.frapples.augustrpc.transport.model.Response;
@@ -21,14 +20,14 @@ public class TimeLogFilterImpl extends BaseFilter {
     }
 
     @Override
-    public Response handle(Request request) throws RequestFailException {
+    public Response handle(Request request) {
         long start = System.currentTimeMillis();
 
-        RequestFailException except = null;
+        RuntimeException except = null;
         Response response = null;
         try {
             response = this.getNext().handle(request);
-        } catch (RequestFailException e) {
+        } catch (RuntimeException e) {
             except = e;
         }
 

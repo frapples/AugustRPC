@@ -1,9 +1,10 @@
 package io.github.frapples.augustrpc.transport.provider.invoker;
 
+import io.github.frapples.augustrpc.ref.exception.AugustRpcInvokedException;
+import io.github.frapples.augustrpc.ref.exception.ErrorCode;
 import io.github.frapples.augustrpc.service.provider.ProviderRpcContext;
 import io.github.frapples.augustrpc.transport.model.Request;
 import io.github.frapples.augustrpc.transport.model.Response;
-import io.github.frapples.augustrpc.transport.provider.exception.ReceiverFailException;
 import io.github.frapples.augustrpc.utils.ReflectionUtils;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -22,7 +23,7 @@ public class ServiceInvoker {
         this.providerRpcContext = providerRpcContext;
     }
 
-    public Response invoke(Request request) throws ReceiverFailException {
+    public Response invoke(Request request) {
         Object result;
         try {
             String className = request.getCallId().getServiceFullyQualifiedName();
@@ -38,8 +39,7 @@ public class ServiceInvoker {
             Method method = service.getClass().getMethod(request.getCallId().getMethodName(), types);
             result = method.invoke(service, request.getArguments());
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-            throw new ReceiverFailException();
+            throw new AugustRpcInvokedException(ErrorCode.INVOKE_FAIL, e);
         }
 
         return new Response(result);

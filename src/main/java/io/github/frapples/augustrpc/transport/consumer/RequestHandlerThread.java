@@ -4,7 +4,8 @@ import io.github.frapples.augustrpc.protocol.JsonProtocolImpl;
 import io.github.frapples.augustrpc.protocol.ProtocolInterface;
 import io.github.frapples.augustrpc.protocol.exception.SerializeParseException;
 import io.github.frapples.augustrpc.registry.RegistryManager;
-import io.github.frapples.augustrpc.transport.consumer.exception.NoSuitableProviderException;
+import io.github.frapples.augustrpc.ref.exception.ErrorCode;
+import io.github.frapples.augustrpc.ref.exception.AugustRpcInvokedException;
 import io.github.frapples.augustrpc.transport.model.ProviderIdentifier;
 import io.github.frapples.augustrpc.transport.model.RequestQueue;
 import io.github.frapples.augustrpc.transport.model.RequestQueue.QueueItem;
@@ -66,7 +67,8 @@ public class RequestHandlerThread extends Thread {
             request.getCallId().getMethodName());
 
         if (providerIdentifier == null) {
-            onComplete.accept(null, new NoSuitableProviderException(
+            onComplete.accept(null, new AugustRpcInvokedException(
+                ErrorCode.NO_SUITABLE_PROVIDER,
                 String.format("Service class: %s", request.getCallId().getServiceFullyQualifiedName())));
             return;
         }

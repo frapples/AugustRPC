@@ -1,6 +1,5 @@
 package io.github.frapples.augustrpc.filter;
 
-import io.github.frapples.augustrpc.transport.consumer.exception.RequestFailException;
 import io.github.frapples.augustrpc.transport.model.Request;
 import io.github.frapples.augustrpc.transport.model.Response;
 
@@ -26,6 +25,6 @@ public abstract class BaseFilter {
     }
 
 
-    public abstract Response handle(Request request) throws RequestFailException;
+    public abstract Response handle(Request request);
 
 }

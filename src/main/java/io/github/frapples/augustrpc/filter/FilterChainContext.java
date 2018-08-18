@@ -3,7 +3,6 @@ package io.github.frapples.augustrpc.filter;
 
 import io.github.frapples.augustrpc.filter.impl.SendedFilterImpl;
 import io.github.frapples.augustrpc.filter.impl.TimeLogFilterImpl;
-import io.github.frapples.augustrpc.transport.consumer.exception.RequestFailException;
 import io.github.frapples.augustrpc.transport.model.Request;
 import io.github.frapples.augustrpc.transport.model.Response;
 
@@ -20,7 +19,7 @@ public class FilterChainContext {
             new SendedFilterImpl(null));
     }
 
-    public Response sendRequest(Request request) throws RequestFailException {
+    public Response sendRequest(Request request) {
         return this.filterChain.handle(request);
     }
 

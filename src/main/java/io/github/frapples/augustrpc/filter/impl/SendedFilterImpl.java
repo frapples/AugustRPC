@@ -3,7 +3,6 @@ package io.github.frapples.augustrpc.filter.impl;
 import io.github.frapples.augustrpc.filter.BaseFilter;
 import io.github.frapples.augustrpc.service.RpcContext;
 import io.github.frapples.augustrpc.transport.consumer.ConsumerTransportContext;
-import io.github.frapples.augustrpc.transport.consumer.exception.RequestFailException;
 import io.github.frapples.augustrpc.transport.model.Request;
 import io.github.frapples.augustrpc.transport.model.Response;
 
@@ -18,7 +17,7 @@ public class SendedFilterImpl extends BaseFilter {
     }
 
     @Override
-    public Response handle(Request request) throws RequestFailException {
+    public Response handle(Request request) {
         RpcContext rpcContext = RpcContext.getInstance();
         ConsumerTransportContext consumerTransportContext = rpcContext.getConsumerTransportContext();
         return consumerTransportContext.sendCallMessage(request);
